@@ -1,0 +1,41 @@
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource-variable/jetbrains-mono';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    @apply bg-ink text-line font-sans text-body antialiased;
+  }
+
+  ::selection {
+    background: rgba(59, 130, 246, 0.35);
+  }
+
+  :focus-visible {
+    outline: 1px solid theme('colors.signal');
+    outline-offset: 3px;
+  }
+}
+
+/* The probe cursor replaces the native cursor over interactive elements
+   (fine pointers only — touch devices keep native behaviour). */
+@media (hover: hover) and (pointer: fine) {
+  a,
+  button,
+  [data-cursor] {
+    cursor: none;
+  }
+}
