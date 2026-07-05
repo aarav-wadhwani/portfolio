@@ -25,14 +25,14 @@ export default function Legend() {
 
           <div className="grid gap-8 px-5 py-8 sm:grid-cols-[176px_1fr] sm:gap-10 sm:px-7 sm:py-10">
             {/* legend entry: headshot */}
-            <motion.figure {...reveal(0.1)} className="max-w-[176px]">
-              <div className="relative border border-signal/70 p-1">
+            <motion.figure {...reveal(0.1)} className="group max-w-[176px]" whileHover={{ scale: 1.02 }}>
+              <div className="relative border border-signal/70 p-1 transition-shadow duration-300 group-hover:shadow-[0_0_28px_rgba(59,130,246,0.25)]">
                 <img
                   src={legend.headshot.src}
                   alt={legend.headshot.alt}
                   width={640}
                   height={640}
-                  className="block aspect-square w-full object-cover grayscale-[25%]"
+                  className="block aspect-square w-full object-cover grayscale-[25%] transition-[filter] duration-300 group-hover:grayscale-0"
                 />
                 {/* corner ticks */}
                 <span aria-hidden className="absolute -left-px -top-px h-2.5 w-2.5 border-l-2 border-t-2 border-signal" />
@@ -47,7 +47,7 @@ export default function Legend() {
             <dl className="space-y-6">
               {legend.rows.map((row, i) => (
                 <motion.div key={row.key} {...reveal(0.15 + i * 0.1)}>
-                  <dt className="font-mono text-ann uppercase tracking-widest text-faint">
+                  <dt className="font-mono text-ann uppercase tracking-widest text-signal/80">
                     {row.key}
                   </dt>
                   <dd className="mt-1.5 text-body leading-relaxed text-line/90">{row.body}</dd>

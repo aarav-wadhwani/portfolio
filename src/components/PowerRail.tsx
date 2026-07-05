@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import type { RailItem } from '../content/site'
 import { rail } from '../content/site'
 import { useActiveBoard } from '../lib/useActiveBoard'
+import HeaderTrace from './HeaderTrace'
 
 /**
  * The Power Rail: the experience timeline that doubles as the site's index.
@@ -28,6 +29,7 @@ export default function PowerRail() {
             <span className="text-signal">VCC</span> · POWER RAIL
           </p>
           <h2 className="mt-2 font-sans text-display font-semibold">Experience</h2>
+          <HeaderTrace />
           <p className="mt-3 font-mono text-ann uppercase text-faint">
             THE RAIL IS THE INDEX · SELECT A TAP POINT TO DROP DOWN TO ITS BOARD
           </p>
@@ -108,12 +110,12 @@ function RailCard({
       <Node active={active} incoming={item.incoming} className={horizontal ? '' : 'absolute -left-9 top-2'} />
       <div
         data-cursor={primary ? true : undefined}
-        className={`relative flex flex-col border bg-ink/70 p-4 transition-colors duration-200 ${
+        className={`relative flex flex-col border bg-ink/70 p-4 transition-all duration-200 ${
           horizontal ? 'mt-4 flex-1' : ''
         } ${
           active
-            ? 'border-signal/70'
-            : 'border-line/15 group-hover:border-signal/50 focus-within:border-signal/50'
+            ? 'border-signal/70 shadow-[0_0_24px_rgba(59,130,246,0.14)]'
+            : 'border-line/15 focus-within:border-signal/50 group-hover:border-signal/50 group-hover:shadow-[0_0_24px_rgba(59,130,246,0.12)]'
         }`}
       >
         {/* stretched primary link: makes the whole card (and its node) clickable */}

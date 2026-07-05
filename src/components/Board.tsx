@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import type { Board as BoardData, BoardBlock, BoardFigure } from '../content/site'
 import { ConvergenceCurve, ForecastCurve, MonitorCurve } from './BoardVisuals'
+import HeaderTrace from './HeaderTrace'
 import TeachingBoard from './TeachingBoard'
 
 /**
@@ -40,6 +41,7 @@ export default function Board({
             <span className="text-signal">{board.id}</span> · {board.org}
           </p>
           <h2 className="mt-2 font-sans text-display font-semibold">{board.title}</h2>
+          <HeaderTrace />
           {board.note && (
             <p className="mt-3 font-mono text-ann uppercase text-faint">✳ {board.note}</p>
           )}
@@ -66,7 +68,7 @@ export default function Board({
         {/* impact + link */}
         {board.impact && (
         <motion.div {...reveal(0.2)} className="mt-12 border-l-2 border-signal/60 pl-5 sm:pl-6">
-          <p className="font-mono text-ann uppercase tracking-widest text-faint">IMPACT</p>
+          <p className="font-mono text-ann uppercase tracking-widest text-signal/80">IMPACT</p>
           <p className="mt-2 max-w-3xl text-label leading-relaxed text-line/85">{board.impact}</p>
           {board.link && (
             <a
@@ -121,12 +123,15 @@ function BlockAndConnector({
         {...reveal(delay)}
         tabIndex={0}
         data-cursor
-        className="group relative border border-line/20 bg-ink/70 p-5 outline-none transition-colors focus-visible:border-signal/70 lg:hover:border-line/45"
+        className="group relative border border-line/20 bg-ink/70 p-5 outline-none transition-all duration-300 focus-visible:border-signal/70 lg:hover:border-signal/50 lg:hover:shadow-[0_0_24px_rgba(59,130,246,0.10)]"
         aria-describedby={showTooltips ? `${block.ref}-tip` : undefined}
       >
         <CornerPins />
         <p className="font-mono text-ann uppercase tracking-widest text-faint">
-          <span className="text-line/80">{block.role}</span> · {block.ref}
+          <span className="text-line/80 transition-colors duration-300 group-hover:text-signal">
+            {block.role}
+          </span>{' '}
+          · {block.ref}
         </p>
         <p className="mt-3 text-label leading-relaxed text-muted">{block.body}</p>
         {block.role === 'PROCESS' && board.visual === 'convergence' && <ConvergenceCurve />}
@@ -173,7 +178,7 @@ function Connector({ label, variant, delay }: { label: string; variant: number; 
     <>
       {/* desktop: horizontal trace */}
       <div className="hidden w-24 flex-col items-center justify-center px-2 lg:flex" aria-hidden>
-        <span className="mb-1 text-center font-mono text-ann leading-tight text-faint">{label}</span>
+        <span className="mb-1 text-center font-mono text-ann leading-tight text-signal/70">{label}</span>
         <svg width="72" height="60" viewBox="0 0 72 60" fill="none" className="overflow-visible">
           <motion.path {...draw} d={d} stroke="#3B82F6" strokeWidth="1.25" strokeLinejoin="round" />
           <motion.path
@@ -198,7 +203,8 @@ function Connector({ label, variant, delay }: { label: string; variant: number; 
 }
 
 function CornerPins() {
-  const tick = 'absolute h-2 w-2 border-line/40'
+  const tick =
+    'absolute h-2 w-2 border-line/40 transition-colors duration-300 group-hover:border-signal/80'
   return (
     <>
       <span aria-hidden className={`${tick} -left-px -top-px border-l border-t`} />
@@ -226,9 +232,10 @@ function Figures({ figures, emphasis }: { figures: BoardFigure[]; emphasis?: boo
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
+          whileHover={{ y: -4 }}
           transition={{ duration: 0.55, delay: i * 0.12 }}
         >
-          <div className="border border-line/20 bg-line/5 p-2">
+          <div className="border border-line/20 bg-line/5 p-2 transition-all duration-300 hover:border-signal/50 hover:shadow-[0_0_28px_rgba(59,130,246,0.14)]">
             <img
               src={fig.src}
               alt={fig.alt}

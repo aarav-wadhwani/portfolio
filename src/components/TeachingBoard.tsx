@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import type { Board as BoardData } from '../content/site'
 import { teaching } from '../content/site'
+import HeaderTrace from './HeaderTrace'
 
 /**
  * Board U5, Teaching Assistant for EE 201. Deliberately the most human board
@@ -27,6 +28,7 @@ export default function TeachingBoard({ board, index }: { board: BoardData; inde
             <span className="text-signal">{board.id}</span> · {board.org}
           </p>
           <h2 className="mt-2 font-sans text-display font-semibold">{board.title}</h2>
+          <HeaderTrace />
         </motion.header>
 
         {/* the checkoff sheet */}
@@ -89,7 +91,7 @@ export default function TeachingBoard({ board, index }: { board: BoardData; inde
                     <motion.blockquote
                       key={i}
                       {...reveal(0.35 + i * 0.12)}
-                      className="border border-line/20 bg-ink/70 p-5"
+                      className="border border-line/20 bg-ink/70 p-5 transition-all duration-300 hover:border-signal/40 hover:shadow-[0_0_20px_rgba(59,130,246,0.10)]"
                     >
                       <p className="font-mono text-ann uppercase tracking-widest text-signal/80">
                         {t.tag}

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { contact } from '../content/site'
 
 /**
@@ -6,6 +6,7 @@ import { contact } from '../content/site'
  * page. CTAs styled as labeled connector ports.
  */
 export default function OutputTerminal() {
+  const reduced = useReducedMotion()
   return (
     <section id="output" className="relative px-6 pb-16 pt-28 sm:pt-40" aria-label="Contact">
       {/* quiet the grid: the signal has resolved */}
@@ -21,6 +22,31 @@ export default function OutputTerminal() {
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.7 }}
         >
+          {/* the signal, fully resolved: one clean pulse, no noise left */}
+          <svg viewBox="0 0 480 40" fill="none" aria-hidden className="mx-auto mb-8 w-full max-w-md overflow-visible">
+            <motion.path
+              d="M 0 20 H 190 L 206 20 L 218 6 L 254 6 L 266 20 H 480"
+              stroke="#3B82F6"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+              initial={{ pathLength: reduced ? 1 : 0 }}
+              whileInView={{ pathLength: 1 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: reduced ? 0 : 1.4, ease: 'easeInOut' }}
+              style={{ filter: 'drop-shadow(0 0 5px rgba(59,130,246,0.5))' }}
+            />
+            <motion.circle
+              cx="480"
+              cy="20"
+              r="3.5"
+              fill="#3B82F6"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ delay: reduced ? 0 : 1.35, duration: 0.3 }}
+              style={{ filter: 'drop-shadow(0 0 5px rgba(59,130,246,0.7))' }}
+            />
+          </svg>
           <p className="font-mono text-ann uppercase tracking-widest text-signal">
             {contact.refTag}
           </p>
@@ -41,7 +67,7 @@ export default function OutputTerminal() {
                 href={port.href}
                 {...(port.download ? { download: '' } : {})}
                 {...(port.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                className="group flex items-center gap-3 border border-line/30 px-5 py-3 font-mono text-label text-line/90 transition-colors hover:border-signal hover:text-signal focus-visible:border-signal"
+                className="group flex items-center gap-3 border border-line/30 px-5 py-3 font-mono text-label text-line/90 transition-all duration-200 hover:-translate-y-0.5 hover:border-signal hover:text-signal hover:shadow-[0_0_24px_rgba(59,130,246,0.22)] focus-visible:border-signal"
               >
                 {/* connector pin */}
                 <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden>

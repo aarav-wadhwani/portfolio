@@ -526,39 +526,54 @@ export const rail: RailItem[] = [
   },
 ]
 
-export const skills = [
-  {
+/** Proficiency: 3 = proficient, 2 = moderate, 1 = familiar. */
+export interface SkillLevel {
+  name: string
+  level: 1 | 2 | 3
+}
+
+export const skills = {
+  languages: {
     ref: 'L1',
     category: 'LANGUAGES',
-    groups: [
-      { level: 'PROFICIENT', items: 'Python, SQL' },
-      { level: 'MODERATE', items: 'Java, JavaScript, R' },
-      { level: 'FAMILIAR', items: 'C++, SystemVerilog' },
-    ],
+    items: [
+      { name: 'Python', level: 3 },
+      { name: 'SQL', level: 3 },
+      { name: 'Java', level: 2 },
+      { name: 'JavaScript', level: 2 },
+      { name: 'R', level: 2 },
+      { name: 'C++', level: 1 },
+      { name: 'SystemVerilog', level: 1 },
+    ] as SkillLevel[],
   },
-  {
+  modeling: {
     ref: 'M1',
     category: 'MODELING',
-    groups: [
-      {
-        level: '',
-        items:
-          'Classification, regression, time series forecasting, feature engineering, dimensionality reduction (PCA)',
-      },
+    items: [
+      'Classification',
+      'Regression',
+      'Time series forecasting',
+      'Feature engineering',
+      'Dimensionality reduction (PCA)',
     ],
   },
-  {
+  tools: {
     ref: 'T1',
     category: 'DATA & TOOLS',
-    groups: [
-      {
-        level: '',
-        items:
-          'FastAPI, scikit-learn, XGBoost, PyTorch, TensorFlow, Git, Docker, PostgreSQL, AWS, Dataiku',
-      },
+    items: [
+      'FastAPI',
+      'scikit-learn',
+      'XGBoost',
+      'PyTorch',
+      'TensorFlow',
+      'Git',
+      'Docker',
+      'PostgreSQL',
+      'AWS',
+      'Dataiku',
     ],
   },
-]
+}
 
 export const contact = {
   refTag: 'X1 · OUTPUT TERMINAL',

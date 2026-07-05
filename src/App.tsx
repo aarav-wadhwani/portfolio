@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Loader from './components/Loader'
 import GridBackground from './components/GridBackground'
+import ProbeField from './components/ProbeField'
 import CustomCursor from './components/CustomCursor'
 import ScrollProgress from './components/ScrollProgress'
 import SignalTrace from './components/SignalTrace'
@@ -39,18 +40,20 @@ export default function App() {
     <>
       {firstVisit && <Loader onDone={() => setReady(true)} />}
       <GridBackground />
+      <ProbeField />
       <CustomCursor />
       <ScrollProgress />
       <main className="relative">
         <SignalTrace />
-        {/* Order matters: the Power Rail doubles as the site index and is the
-            first thing after the hero; boards follow in U1…U8 order. */}
+        {/* Order matters: bio directly under the name; the Power Rail (site
+            index) next; skills right after the rail as the spec-sheet bridge
+            into the boards, which follow in U1…U8 order. */}
         <div id="site-content" className="relative z-10">
           <Hero ready={ready} />
-          <PowerRail />
           <Legend />
-          <ComponentBoards />
+          <PowerRail />
           <PartsList />
+          <ComponentBoards />
           <OutputTerminal />
         </div>
       </main>

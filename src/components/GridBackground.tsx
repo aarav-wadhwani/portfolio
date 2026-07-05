@@ -9,13 +9,14 @@ const NOISE_URI = `url("data:image/svg+xml,${encodeURIComponent(
 export default function GridBackground() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
-      {/* 24px schematic grid, 1–2% white lines */}
+      {/* schematic grid, tinted with the live-signal blue: fine 24px minor
+          lines plus a coarser 96px major grid for depth */}
       <div
         className="absolute inset-0"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(232,232,230,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(232,232,230,0.04) 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
+            'linear-gradient(rgba(59,130,246,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.055) 1px, transparent 1px), linear-gradient(rgba(59,130,246,0.09) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.09) 1px, transparent 1px)',
+          backgroundSize: '24px 24px, 24px 24px, 96px 96px, 96px 96px',
         }}
       />
       {/* grain */}

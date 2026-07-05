@@ -112,11 +112,13 @@ export default function Hero({ ready }: { ready: boolean }) {
 
       {/* label plate */}
       <motion.div
-        className="mt-10 w-full max-w-2xl border border-line/25 px-6 py-6 sm:px-8"
+        className="group relative mt-10 w-full max-w-2xl border border-line/25 px-6 py-6 transition-all duration-300 hover:border-signal/50 hover:shadow-[0_0_32px_rgba(59,130,246,0.10)] sm:px-8"
         initial={{ opacity: 0 }}
         animate={ready ? { opacity: 1 } : {}}
         transition={{ delay: labelDelay, duration: 0.5 }}
       >
+        <span aria-hidden className="absolute -left-px -top-px h-3 w-3 border-l-2 border-t-2 border-signal/70" />
+        <span aria-hidden className="absolute -bottom-px -right-px h-3 w-3 border-b-2 border-r-2 border-signal/70" />
         <motion.p
           className="font-mono text-ann uppercase text-signal"
           initial={{ opacity: 0 }}
@@ -131,15 +133,24 @@ export default function Hero({ ready }: { ready: boolean }) {
               key={i}
               aria-hidden
               className="inline-block"
-              initial={reduced ? { opacity: 0 } : { opacity: 0, y: 8, filter: 'blur(5px)' }}
+              initial={
+                reduced
+                  ? { opacity: 0 }
+                  : { opacity: 0, y: 8, filter: 'blur(5px)', color: '#3B82F6' }
+              }
               animate={
                 ready
                   ? reduced
                     ? { opacity: 1 }
-                    : { opacity: 1, y: 0, filter: 'blur(0px)' }
+                    : { opacity: 1, y: 0, filter: 'blur(0px)', color: '#E8E8E6' }
                   : {}
               }
-              transition={{ delay: labelDelay + 0.2 + i * 0.035, duration: 0.35 }}
+              transition={{
+                delay: labelDelay + 0.2 + i * 0.035,
+                duration: 0.35,
+                // each letter lands blue-hot, then cools to off-white
+                color: { delay: labelDelay + 0.5 + i * 0.035, duration: 0.6 },
+              }}
             >
               {ch === ' ' ? ' ' : ch}
             </motion.span>
