@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { skills } from '../content/site'
 
-/** Skills as a reference table — a bill of materials. */
+/** Skills as a reference table: a bill of materials. */
 export default function PartsList() {
   return (
     <section id="skills" className="px-6 py-24 sm:py-32" aria-label="Skills">
@@ -46,7 +46,7 @@ export default function PartsList() {
                     {g.items}
                     {g.level && (
                       <span className="ml-2 font-mono text-ann uppercase text-faint">
-                        — {g.level}
+                        · {g.level}
                       </span>
                     )}
                   </p>

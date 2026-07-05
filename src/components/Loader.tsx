@@ -68,7 +68,7 @@ export default function Loader({ onDone }: { onDone: () => void }) {
               transition={{ delay: reduced ? 0.3 : 1.05 }}
             >
               {' '}
-              — LOCKED
+              · LOCKED
             </motion.span>
           </motion.p>
         </motion.div>

@@ -4,7 +4,7 @@ import Board from './Board'
 
 /**
  * The flagship project sections. All copy and assets live in
- * src/content/site.ts — a ready-to-duplicate TEMPLATE block for adding new
+ * src/content/site.ts: a ready-to-duplicate TEMPLATE block for adding new
  * boards is at the bottom of the `boards` array there.
  */
 export default function ComponentBoards() {

@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import type { Board as BoardData, BoardBlock, BoardFigure } from '../content/site'
-import { ConvergenceCurve, ForecastCurve } from './BoardVisuals'
+import { ConvergenceCurve, ForecastCurve, MonitorCurve } from './BoardVisuals'
+import TeachingBoard from './TeachingBoard'
 
 /**
  * One component board: input → process → output, connected by short
@@ -26,8 +27,13 @@ export default function Board({
     transition: { duration: 0.55, delay: reduced ? 0 : delay },
   })
 
+  // Non-pipeline boards (EE 201) render as a lab checkoff sheet instead.
+  if (board.kind === 'teaching') {
+    return <TeachingBoard board={board} index={index} />
+  }
+
   return (
-    <section id={board.id} className="px-6 py-24 sm:py-28" aria-label={board.title}>
+    <section id={board.id} data-board className="px-6 py-24 sm:py-28" aria-label={board.title}>
       <div className="mx-auto max-w-board">
         <motion.header data-solder {...reveal()}>
           <p className="font-mono text-ann uppercase tracking-widest text-muted">
@@ -41,7 +47,7 @@ export default function Board({
 
         {/* input → process → output */}
         <div className="mt-10 grid items-stretch gap-3 lg:grid-cols-[1fr_auto_1fr_auto_1fr] lg:gap-0">
-          {board.blocks.map((block, i) => (
+          {board.blocks?.map((block, i) => (
             <BlockAndConnector
               key={block.ref}
               block={block}
@@ -58,6 +64,7 @@ export default function Board({
         {board.figures && <Figures figures={board.figures} emphasis={board.figureEmphasis} />}
 
         {/* impact + link */}
+        {board.impact && (
         <motion.div {...reveal(0.2)} className="mt-12 border-l-2 border-signal/60 pl-5 sm:pl-6">
           <p className="font-mono text-ann uppercase tracking-widest text-faint">IMPACT</p>
           <p className="mt-2 max-w-3xl text-label leading-relaxed text-line/85">{board.impact}</p>
@@ -77,6 +84,7 @@ export default function Board({
             </a>
           )}
         </motion.div>
+        )}
       </div>
     </section>
   )
@@ -104,7 +112,7 @@ function BlockAndConnector({
     <>
       {blockIndex > 0 && (
         <Connector
-          label={board.connectors[(blockIndex - 1) as 0 | 1]}
+          label={board.connectors?.[(blockIndex - 1) as 0 | 1] ?? ''}
           variant={(boardIndex + blockIndex) % 3}
           delay={delay - 0.08}
         />
@@ -123,6 +131,7 @@ function BlockAndConnector({
         <p className="mt-3 text-label leading-relaxed text-muted">{block.body}</p>
         {block.role === 'PROCESS' && board.visual === 'convergence' && <ConvergenceCurve />}
         {block.role === 'PROCESS' && board.visual === 'forecast' && <ForecastCurve />}
+        {block.role === 'PROCESS' && board.visual === 'monitor' && <MonitorCurve />}
 
         {/* hover-reveal dimension-line annotation (desktop, fine pointer only) */}
         {showTooltips && (
@@ -223,6 +232,8 @@ function Figures({ figures, emphasis }: { figures: BoardFigure[]; emphasis?: boo
             <img
               src={fig.src}
               alt={fig.alt}
+              width={fig.width}
+              height={fig.height}
               loading="lazy"
               decoding="async"
               className={`block w-full ${emphasis && i > 0 ? 'aspect-[3/4] object-cover' : 'h-auto'}`}

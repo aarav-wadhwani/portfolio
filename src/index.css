@@ -31,7 +31,7 @@
 }
 
 /* The probe cursor replaces the native cursor over interactive elements
-   (fine pointers only — touch devices keep native behaviour). */
+   (fine pointers only: touch devices keep native behaviour). */
 @media (hover: hover) and (pointer: fine) {
   a,
   button,

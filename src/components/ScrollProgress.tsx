@@ -1,15 +1,18 @@
 import { useState } from 'react'
 import { useMotionValueEvent, useScroll } from 'framer-motion'
+import { useActiveBoard } from '../lib/useActiveBoard'
 
 const CELLS = 10
 
 /**
  * Corner-anchored oscilloscope channel readout showing progress through
- * "the run". Purely informative; hidden from assistive tech.
+ * "the run", plus the reference designator of the board currently in view.
+ * Purely informative; hidden from assistive tech.
  */
 export default function ScrollProgress() {
   const { scrollYProgress } = useScroll()
   const [pct, setPct] = useState(0)
+  const activeBoard = useActiveBoard()
 
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     setPct(Math.min(100, Math.max(0, Math.round(v * 100))))
@@ -32,6 +35,7 @@ export default function ScrollProgress() {
         ))}
       </span>
       <span className="tabular-nums">{String(pct).padStart(3, '0')}%</span>
+      {activeBoard && <span className="text-signal/80">· {activeBoard}</span>}
     </div>
   )
 }

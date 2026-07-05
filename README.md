@@ -1,11 +1,11 @@
-# aaravwadhwani.com — "Engineering the Signal"
+# aaravwadhwani.com: "Engineering the Signal"
 
 Single-page portfolio drawn as one continuous engineering schematic: a scroll-linked
 signal trace runs down the page, plugging into each project "component board"
 (input → process → output), and resolves into a clean output terminal at the end.
 
 **Stack:** React + Vite + TypeScript · Tailwind CSS (custom token theme) · Framer Motion.
-No icon/UI kits — all schematic symbols are hand-authored inline SVG. No audio, by design.
+No icon/UI kits: all schematic symbols are hand-authored inline SVG. No audio, by design.
 
 ## Commands
 
@@ -19,10 +19,11 @@ npm run assets   # regenerate optimized images / favicon / OG image from assets-
 
 ## Editing content
 
-Everything lives in **`src/content/site.ts`** — hero, bio, all six project boards
-(including hover tooltips and connector annotations), experience, skills, contact ports.
-A ready-to-duplicate **TEMPLATE block** for adding a new project board is commented at
-the bottom of the `boards` array there.
+Everything lives in **`src/content/site.ts`**: hero, bio, all project boards U1–U8
+(including hover tooltips and connector annotations), the Power Rail index items,
+the EE 201 checkoff-sheet content, skills, and contact ports. A ready-to-duplicate
+**TEMPLATE block** for adding a new project board is commented at the bottom of the
+`boards` array there. House style: no em dashes in copy, anywhere.
 
 Images: drop the original into **`assets-src/`**, add a line to
 `scripts/generate-assets.mjs`, run `npm run assets`, then reference the generated

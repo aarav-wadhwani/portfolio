@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { contact } from '../content/site'
 
 /**
- * The visual payoff: fully resolved, no noise — the calmest section on the
+ * The visual payoff: fully resolved, no noise: the calmest section on the
  * page. CTAs styled as labeled connector ports.
  */
 export default function OutputTerminal() {

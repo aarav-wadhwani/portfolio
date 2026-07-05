@@ -11,7 +11,7 @@ import PowerRail from './components/PowerRail'
 import PartsList from './components/PartsList'
 import OutputTerminal from './components/OutputTerminal'
 
-/* No audio anywhere on this site — intentional. A portfolio gets opened at
+/* No audio anywhere on this site: intentional. A portfolio gets opened at
    recruiters' desks; autoplay sound is a bigger risk than reward. */
 
 export default function App() {
@@ -30,7 +30,7 @@ export default function App() {
       try {
         sessionStorage.setItem('aw-signal-lock', '1')
       } catch {
-        /* private mode — loader will simply replay next visit */
+        /* private mode: loader will simply replay next visit */
       }
     }
   }, [firstVisit])
@@ -43,11 +43,13 @@ export default function App() {
       <ScrollProgress />
       <main className="relative">
         <SignalTrace />
+        {/* Order matters: the Power Rail doubles as the site index and is the
+            first thing after the hero; boards follow in U1…U8 order. */}
         <div id="site-content" className="relative z-10">
           <Hero ready={ready} />
+          <PowerRail />
           <Legend />
           <ComponentBoards />
-          <PowerRail />
           <PartsList />
           <OutputTerminal />
         </div>
