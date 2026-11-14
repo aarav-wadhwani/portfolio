@@ -1,5 +1,5 @@
-@import '@fontsource-variable/space-grotesk';
-@import '@fontsource-variable/jetbrains-mono';
+@import '@fontsource-variable/schibsted-grotesk/wght.css';
+@import '@fontsource-variable/martian-mono/wght.css';
 
 @tailwind base;
 @tailwind components;
@@ -8,34 +8,117 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
+    scroll-padding-top: 4.5rem; /* clear the sticky nav on anchor jumps */
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    @apply bg-ink text-line font-sans text-body antialiased;
+    @apply bg-paper font-sans text-base text-ink antialiased;
   }
 
   ::selection {
-    background: rgba(59, 130, 246, 0.35);
+    background: rgba(232, 163, 23, 0.35);
   }
 
+  /* Amber alone is under 3:1 on white, so the ring carries a thin ink edge. */
   :focus-visible {
-    outline: 1px solid theme('colors.signal');
-    outline-offset: 3px;
+    outline: 2px solid theme('colors.amber');
+    outline-offset: 2px;
+    box-shadow: 0 0 0 1px theme('colors.ink');
+    border-radius: 2px;
+  }
+
+  .num {
+    @apply font-mono;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
   }
 }
 
-/* The probe cursor replaces the native cursor over interactive elements
-   (fine pointers only: touch devices keep native behaviour). */
-@media (hover: hover) and (pointer: fine) {
-  a,
-  button,
-  [data-cursor] {
-    cursor: none;
+@layer components {
+  .link {
+    @apply underline decoration-amber decoration-2 underline-offset-4;
   }
+  .link:hover {
+    text-decoration-thickness: 3px;
+  }
+
+  .btn {
+    @apply inline-flex min-h-[2.75rem] items-center justify-center gap-2 rounded-md border px-4 text-base font-medium transition-colors;
+  }
+  .btn-primary {
+    @apply border-ink bg-ink text-panel;
+  }
+  .btn-primary:hover {
+    background: #1b2c47;
+  }
+  .btn-secondary {
+    @apply border-rule bg-panel text-ink;
+  }
+  .btn-secondary:hover {
+    @apply border-ink;
+  }
+}
+
+/* ── Ledger ──────────────────────────────────────────────────────────
+   Without JavaScript every case study is open and readable. With it, the
+   closed rows collapse; opening one animates its height. */
+.ledger-panel {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+.ledger-panel > div {
+  overflow: hidden;
+  min-height: 0;
+}
+.js .ledger-panel {
+  transition:
+    grid-template-rows 320ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    visibility 320ms;
+}
+.js .ledger-panel[data-open='false'] {
+  grid-template-rows: 0fr;
+  visibility: hidden;
+}
+
+/* The one orchestrated moment: rows fill top to bottom on first load. */
+@keyframes ledger-fill {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.js .ledger-row {
+  animation: ledger-fill 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 60ms + 80ms);
+}
+
+.no-js .js-only {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .js .ledger-row {
+    animation: none;
+  }
+  .js .ledger-panel {
+    transition: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Without JavaScript the mobile sheet cannot open, so show the links inline. */
+.no-js .nav-links {
+  display: flex !important;
+  flex-wrap: wrap;
+  row-gap: 0;
 }

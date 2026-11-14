@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aaravwadhwani.com/sitemap.xml
+Sitemap: https://aaravwadhwani.vercel.app/sitemap.xml

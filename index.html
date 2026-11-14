@@ -1,44 +1,99 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aarav Wadhwani: Engineering the Signal</title>
+    <script>
+      document.documentElement.className = 'js'
+    </script>
+    <title>Aarav Wadhwani: AI and quant engineering for finance teams</title>
     <meta
       name="description"
-      content="Aarav Wadhwani turns raw signals (sensor data, market data, unstructured documents) into working systems. ECE + Data Science at the University of Washington."
+      content="I build AI systems inside finance teams, and stay until people use them. AI Solutions Engineering Intern at Indago Capital, commodities modeling at Macquarie, and first author of an ACM UIST '26 demo."
     />
-    <link rel="canonical" href="https://aaravwadhwani.com/" />
-    <meta name="theme-color" content="#0A0A0B" />
+    <!-- D4: aaravwadhwani.com does not resolve yet, so the Vercel domain is canonical. -->
+    <link rel="canonical" href="https://aaravwadhwani.vercel.app/" />
+    <meta name="theme-color" content="#F7F8FA" />
 
-    <!-- Icons -->
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://aaravwadhwani.com/" />
-    <meta property="og:title" content="Aarav Wadhwani: Engineering the Signal" />
+    <meta property="og:url" content="https://aaravwadhwani.vercel.app/" />
+    <meta property="og:title" content="Aarav Wadhwani: AI and quant engineering for finance teams" />
     <meta
       property="og:description"
-      content="Turning raw signals, sensor data, market data, unstructured documents, into working systems."
+      content="I build AI systems inside finance teams, and stay until people use them."
     />
-    <meta property="og:image" content="https://aaravwadhwani.com/og-image.png" />
+    <meta property="og:image" content="https://aaravwadhwani.vercel.app/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Aarav Wadhwani. I build AI systems inside finance teams, and stay until people use them."
+    />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Aarav Wadhwani: Engineering the Signal" />
+    <meta name="twitter:title" content="Aarav Wadhwani: AI and quant engineering for finance teams" />
     <meta
       name="twitter:description"
-      content="Turning raw signals, sensor data, market data, unstructured documents, into working systems."
+      content="I build AI systems inside finance teams, and stay until people use them."
     />
-    <meta name="twitter:image" content="https://aaravwadhwani.com/og-image.png" />
+    <meta name="twitter:image" content="https://aaravwadhwani.vercel.app/og-image.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://aaravwadhwani.vercel.app/#person",
+            "name": "Aarav Wadhwani",
+            "url": "https://aaravwadhwani.vercel.app/",
+            "email": "mailto:aaravw28@uw.edu",
+            "alumniOf": {
+              "@type": "CollegeOrUniversity",
+              "name": "University of Washington",
+              "sameAs": "https://www.washington.edu/"
+            },
+            "sameAs": [
+              "https://www.linkedin.com/in/aarav-wadhwani/",
+              "https://github.com/aarav-wadhwani"
+            ]
+          },
+          {
+            "@type": "ScholarlyArticle",
+            "headline": "Demo of NailSense: Unobtrusive Wireless Smart Nail Stickers for Whole-Hand Posture Tracking",
+            "author": [
+              { "@id": "https://aaravwadhwani.vercel.app/#person" },
+              { "@type": "Person", "name": "Jiayi Shao" },
+              { "@type": "Person", "name": "Rishabh L Goenka" },
+              { "@type": "Person", "name": "Zhenyang Fu" },
+              { "@type": "Person", "name": "Xiyuan Shen" },
+              { "@type": "Person", "name": "Qiuyue (Shirley) Xue" }
+            ],
+            "datePublished": "2026-11-13",
+            "isPartOf": {
+              "@type": "PublicationIssue",
+              "name": "UIST Adjunct '26: Adjunct Proceedings of the 39th Annual ACM Symposium on User Interface Software and Technology"
+            },
+            "pagination": "1-3",
+            "publisher": { "@type": "Organization", "name": "Association for Computing Machinery" },
+            "identifier": {
+              "@type": "PropertyValue",
+              "propertyID": "DOI",
+              "value": "10.1145/3830397.3842456"
+            },
+            "sameAs": "https://doi.org/10.1145/3830397.3842456",
+            "url": "https://doi.org/10.1145/3830397.3842456"
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><!--app-html--></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

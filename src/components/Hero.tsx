@@ -1,201 +1,49 @@
-import { motion, useReducedMotion } from 'framer-motion'
-import { hero } from '../content/site'
+import { links, positioning, proof } from '../content/site'
+import Ledger from './Ledger'
 
-/** Deterministic pseudo-random walk for the pre-lock noise traces. */
-function noisePath(seed: number, amplitude: number, width = 680, mid = 80): string {
-  let s = seed
-  const rand = () => {
-    s = (s * 1103515245 + 12345) % 2147483648
-    return s / 2147483648 - 0.5
-  }
-  let d = `M 0 ${mid}`
-  for (let x = 16; x <= width; x += 16) {
-    d += ` L ${x} ${(mid + rand() * 2 * amplitude).toFixed(1)}`
-  }
-  return d
-}
-
-const NOISE_HEAVY = noisePath(7, 44)
-const NOISE_LIGHT = noisePath(23, 14)
-// clean locked signal: flat line with one crisp pulse
-const LOCKED = 'M 0 80 H 280 L 300 80 L 316 44 L 364 44 L 380 80 H 680'
-
-/**
- * Cold open. A jagged trace draws itself in like an oscilloscope finding
- * signal lock (~1.5s), steadies, then the name solders onto a label plate.
- */
-export default function Hero({ ready }: { ready: boolean }) {
-  const reduced = useReducedMotion()
-  const labelDelay = reduced ? 0.1 : 1.7
-
+/** Above the fold: who I am, what I ship, how to reach me, and the ledger. */
+export default function Hero() {
   return (
-    <section
-      className="relative flex min-h-[100svh] flex-col items-center justify-center px-6"
-      aria-label="Introduction"
-    >
-      {/* oscilloscope lock */}
-      <div className="w-full max-w-2xl">
-        <svg
-          viewBox="0 0 680 160"
-          fill="none"
-          className="w-full"
-          aria-hidden
-          style={{ overflow: 'visible' }}
-        >
-          {ready && !reduced && (
-            <>
-              <motion.path
-                d={NOISE_HEAVY}
-                stroke="#3B82F6"
-                strokeWidth="1.5"
-                initial={{ pathLength: 0, opacity: 1 }}
-                animate={{ pathLength: 1, opacity: [1, 1, 0] }}
-                transition={{
-                  pathLength: { duration: 0.8, ease: 'linear' },
-                  opacity: { duration: 1.2, times: [0, 0.7, 1] },
-                }}
-              />
-              <motion.path
-                d={NOISE_LIGHT}
-                stroke="#3B82F6"
-                strokeWidth="1.5"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0, 1, 0] }}
-                transition={{ duration: 1.55, times: [0, 0.5, 0.75, 1] }}
-              />
-              <motion.path
-                d={LOCKED}
-                stroke="#3B82F6"
-                strokeWidth="1.5"
-                strokeLinejoin="round"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.45, duration: 0.3 }}
-                style={{ filter: 'drop-shadow(0 0 4px rgba(59,130,246,0.5))' }}
-              />
-              {/* lock flash at the pulse */}
-              <motion.path
-                d={LOCKED}
-                stroke="#3B82F6"
-                strokeWidth="4"
-                strokeLinejoin="round"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.35, 0] }}
-                transition={{ delay: 1.5, duration: 0.5 }}
-                style={{ filter: 'blur(4px)' }}
-              />
-            </>
-          )}
-          {ready && reduced && (
-            <motion.path
-              d={LOCKED}
-              stroke="#3B82F6"
-              strokeWidth="1.5"
-              strokeLinejoin="round"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6 }}
-            />
-          )}
-          {/* graticule ticks */}
-          <path d="M 0 156 H 680" stroke="rgba(232,232,230,0.12)" strokeWidth="1" />
-          {Array.from({ length: 18 }, (_, i) => (
-            <path
-              key={i}
-              d={`M ${i * 40} 152 V 160`}
-              stroke="rgba(232,232,230,0.18)"
-              strokeWidth="1"
-            />
-          ))}
-        </svg>
+    <div id="top" className="mx-auto max-w-page px-6 pb-14 pt-8 md:pb-20 md:pt-10">
+      <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_auto] md:gap-12">
+        <div>
+          <h1 className="max-w-[22ch] text-balance text-hero font-semibold">
+            <span className="sr-only">{positioning.name}: </span>
+            {positioning.headline}
+          </h1>
+          <p className="mt-4 max-w-prose text-base text-slate md:text-md">{positioning.supporting}</p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <a href={links.resume} className="btn btn-primary">
+              Resume
+            </a>
+            <a href={`mailto:${links.email}`} className="btn btn-secondary">
+              Email
+            </a>
+            <a href={links.linkedin} className="btn btn-secondary" rel="noopener noreferrer" target="_blank">
+              LinkedIn
+            </a>
+          </div>
+        </div>
+        <img
+          src={positioning.headshot.src}
+          alt={positioning.headshot.alt}
+          width={640}
+          height={640}
+          {...{ fetchpriority: 'high' }}
+          className="order-first h-20 w-20 rounded-lg border border-rule object-cover md:order-none md:h-44 md:w-44"
+        />
       </div>
 
-      {/* label plate */}
-      <motion.div
-        className="group relative mt-10 w-full max-w-2xl border border-line/25 px-6 py-6 transition-all duration-300 hover:border-signal/50 hover:shadow-[0_0_32px_rgba(59,130,246,0.10)] sm:px-8"
-        initial={{ opacity: 0 }}
-        animate={ready ? { opacity: 1 } : {}}
-        transition={{ delay: labelDelay, duration: 0.5 }}
-      >
-        <span aria-hidden className="absolute -left-px -top-px h-3 w-3 border-l-2 border-t-2 border-signal/70" />
-        <span aria-hidden className="absolute -bottom-px -right-px h-3 w-3 border-b-2 border-r-2 border-signal/70" />
-        <motion.p
-          className="font-mono text-ann uppercase text-signal"
-          initial={{ opacity: 0 }}
-          animate={ready ? { opacity: 1 } : {}}
-          transition={{ delay: labelDelay + 0.15, duration: 0.4 }}
-        >
-          {hero.refTag}
-        </motion.p>
-        <h1 className="mt-3 font-sans text-display font-semibold" aria-label={hero.name}>
-          {hero.name.split('').map((ch, i) => (
-            <motion.span
-              key={i}
-              aria-hidden
-              className="inline-block"
-              initial={
-                reduced
-                  ? { opacity: 0 }
-                  : { opacity: 0, y: 8, filter: 'blur(5px)', color: '#3B82F6' }
-              }
-              animate={
-                ready
-                  ? reduced
-                    ? { opacity: 1 }
-                    : { opacity: 1, y: 0, filter: 'blur(0px)', color: '#E8E8E6' }
-                  : {}
-              }
-              transition={{
-                delay: labelDelay + 0.2 + i * 0.035,
-                duration: 0.35,
-                // each letter lands blue-hot, then cools to off-white
-                color: { delay: labelDelay + 0.5 + i * 0.035, duration: 0.6 },
-              }}
-            >
-              {ch === ' ' ? ' ' : ch}
-            </motion.span>
-          ))}
-        </h1>
-        <motion.p
-          className="mt-3 font-mono text-ann uppercase text-muted"
-          initial={{ opacity: 0 }}
-          animate={ready ? { opacity: 1 } : {}}
-          transition={{ delay: labelDelay + 0.75, duration: 0.4 }}
-        >
-          {hero.role}
-        </motion.p>
-        <motion.p
-          className="mt-4 max-w-xl text-body text-muted"
-          initial={{ opacity: 0 }}
-          animate={ready ? { opacity: 1 } : {}}
-          transition={{ delay: labelDelay + 0.9, duration: 0.5 }}
-        >
-          {hero.tagline}
-        </motion.p>
-      </motion.div>
+      <Ledger />
 
-      {/* scroll affordance: connector arrow */}
-      <motion.a
-        href="#legend"
-        className="group absolute bottom-8 flex flex-col items-center gap-2 font-mono text-ann uppercase text-faint transition-colors hover:text-signal focus-visible:text-signal"
-        initial={{ opacity: 0 }}
-        animate={ready ? { opacity: 1 } : {}}
-        transition={{ delay: labelDelay + 1.2, duration: 0.6 }}
-      >
-        <span>{hero.scrollCue}</span>
-        <motion.svg
-          width="16"
-          height="34"
-          viewBox="0 0 16 34"
-          fill="none"
-          aria-hidden
-          animate={reduced ? undefined : { y: [0, 5, 0] }}
-          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <circle cx="8" cy="4" r="3" stroke="currentColor" strokeWidth="1.25" />
-          <path d="M8 7 V22 M2 22 L8 30 L14 22" stroke="currentColor" strokeWidth="1.25" />
-        </motion.svg>
-      </motion.a>
-    </section>
+      <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-1 text-sm text-slate">
+        {proof.map((p) => (
+          <li key={p} className="flex items-center gap-2">
+            <span aria-hidden className="h-1 w-1 rounded-full bg-slate" />
+            {p}
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }

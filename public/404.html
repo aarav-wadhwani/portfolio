@@ -3,90 +3,62 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Signal lost · Aarav Wadhwani</title>
+    <title>Page not found · Aarav Wadhwani</title>
     <meta name="robots" content="noindex" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <style>
-      :root {
-        color-scheme: dark;
-      }
       body {
         margin: 0;
         min-height: 100vh;
         display: flex;
         align-items: center;
-        justify-content: center;
-        background-color: #0a0a0b;
-        background-image:
-          linear-gradient(rgba(232, 232, 230, 0.04) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(232, 232, 230, 0.04) 1px, transparent 1px);
-        background-size: 24px 24px;
-        color: #e8e8e6;
-        font-family: 'Space Grotesk', system-ui, sans-serif;
-        text-align: center;
+        background: #f7f8fa;
+        color: #0f1b2d;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
         padding: 24px;
       }
-      .mono {
-        font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
-        letter-spacing: 0.08em;
-      }
-      h1 {
-        font-size: clamp(2rem, 6vw, 3.25rem);
-        font-weight: 600;
-        letter-spacing: -0.02em;
-        margin: 28px 0 10px;
-      }
-      p {
-        color: rgba(232, 232, 230, 0.62);
+      main {
         max-width: 34rem;
         margin: 0 auto;
-        line-height: 1.65;
       }
-      .tag {
-        color: #3b82f6;
-        font-size: 0.6875rem;
-        text-transform: uppercase;
+      .code {
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 0.875rem;
+        color: #4a5568;
+      }
+      h1 {
+        font-size: clamp(2rem, 6vw, 3rem);
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        margin: 12px 0;
+      }
+      p {
+        color: #4a5568;
+        line-height: 1.6;
+        font-size: 1.0625rem;
       }
       a {
         display: inline-block;
-        margin-top: 32px;
-        padding: 12px 22px;
-        border: 1px solid rgba(232, 232, 230, 0.3);
-        color: #e8e8e6;
+        margin-top: 20px;
+        padding: 12px 18px;
+        border-radius: 6px;
+        background: #0f1b2d;
+        color: #fff;
         text-decoration: none;
-        font-size: 0.8125rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        transition: border-color 0.2s, color 0.2s;
+        font-weight: 500;
       }
-      a:hover,
       a:focus-visible {
-        border-color: #3b82f6;
-        color: #3b82f6;
-      }
-      svg {
-        max-width: 420px;
-        width: 90%;
+        outline: 2px solid #e8a317;
+        outline-offset: 2px;
       }
     </style>
   </head>
   <body>
     <main>
-      <!-- a trace that goes nowhere -->
-      <svg viewBox="0 0 420 80" fill="none" aria-hidden="true">
-        <path
-          d="M0 40 H150 L165 40 L172 22 L180 58 L188 30 L196 50 L204 36 L212 44 L220 40 L268 40"
-          stroke="#3B82F6"
-          stroke-width="1.5"
-        />
-        <path d="M268 34 V46 M276 30 V50" stroke="#3B82F6" stroke-width="1.5" opacity="0.55" />
-        <path d="M284 26 V54" stroke="#3B82F6" stroke-width="1.5" opacity="0.25" />
-        <path d="M292 40 H420" stroke="rgba(232,232,230,0.12)" stroke-width="1" stroke-dasharray="4 6" />
-      </svg>
-      <p class="mono tag">ERR 404 / NO CONTINUITY</p>
-      <h1>Signal lost.</h1>
-      <p>This trace terminates in open circuit: the page you probed for doesn't exist.</p>
-      <a href="/" class="mono">← RETURN TO SIGNAL SOURCE</a>
+      <p class="code">404</p>
+      <h1>No entry for this page.</h1>
+      <p>The link is broken or the page has moved. Everything on this site lives on one page.</p>
+      <a href="/">Back to the home page</a>
     </main>
   </body>
 </html>

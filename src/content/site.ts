@@ -1,588 +1,501 @@
 /**
  * Single source of truth for all site copy and assets.
- * Swap an image in src/assets/ (via assets-src/ + `npm run assets`) or edit a
- * string here; no component files need to change.
  *
- * House style: no em dashes anywhere in copy. Use commas, colons, periods,
- * or parentheses instead. En dashes in ranges (0–100, 4.8–4.9) are fine.
+ * Every claim here comes from Section 4 (Fact Sheet) of the redesign plan.
+ * Do not add, round, or reword a number without checking it there first.
+ * House style: first person, sentence case, no em dashes. En dashes are fine
+ * in numeric ranges (0–100, 4.8–4.9).
+ *
+ * Open items are marked TODO(aarav) and listed in CHANGELOG.md.
  */
 import headshot from '../assets/headshot.webp'
-import poseOverlay from '../assets/ubicomp-pose-overlay-1.webp'
-import ubicompDevice from '../assets/ubicomp-device.webp'
+import nailsenseDevice from '../assets/ubicomp-device.webp'
 import birdnetDevice from '../assets/birdnet-device.webp'
-import birdnetWebapp from '../assets/birdnet-webapp.webp'
-import questraUi from '../assets/questra-ui.webp'
 import llmCoefficients from '../assets/llm-style-coefficients.webp'
 import llmRankingComparison from '../assets/llm-ranking-comparison.webp'
-import llmPerCategory from '../assets/llm-per-category-ranks.webp'
 
-export const hero = {
-  refTag: 'U0 / SIGNAL SOURCE',
-  name: 'Aarav Wadhwani',
-  role: 'ECE + DATA SCIENCE · UNIVERSITY OF WASHINGTON',
-  tagline:
-    'I turn raw signals, sensor streams, market data, unstructured documents, into working systems.',
-  scrollCue: 'BEGIN TRACE',
+/* ── Identity and links ─────────────────────────────────────────────── */
+
+export const links = {
+  email: 'aaravw28@uw.edu',
+  linkedin: 'https://www.linkedin.com/in/aarav-wadhwani/',
+  github: 'https://github.com/aarav-wadhwani',
+  // TODO(aarav): D3. This PDF predates Indago. Replace it before production.
+  resume: '/resume/Aarav_Wadhwani_Resume.pdf',
 }
 
-export const legend = {
-  refTag: 'LEGEND / SPECIFICATION',
-  docTag: 'DOC AW-2027 · REV B · SHEET 1/1',
+export const positioning = {
+  name: 'Aarav Wadhwani',
+  headline: 'I build AI systems inside finance teams, and stay until people use them.',
+  supporting:
+    'Most recently AI Solutions Engineering Intern at Indago Capital, an asset-based finance firm in New York. Before that, commodities modeling at Macquarie and wearable ML research at UW (first author, ACM UIST ’26 demo).',
+  // TODO(aarav): D8. Swap in a new headshot if you want one (assets-src/headshot.jpeg).
   headshot: {
     src: headshot,
-    alt: 'Aarav Wadhwani, outdoors with evergreen trees and a waterfall behind him',
-    caption: 'FIG. 1 · A. WADHWANI',
+    alt: 'Aarav Wadhwani, outdoors with evergreen trees behind him',
   },
-  rows: [
-    {
-      key: 'EDUCATION',
-      body: 'Aarav Wadhwani: B.S. Electrical & Computer Engineering, minor in Data Science, University of Washington. Expected June 2027 · GPA 3.85 · Dean’s List.',
-    },
-    {
-      key: 'APPROACH',
-      body: 'The ECE + data science combination sets the method: take a raw signal, find its structure, turn it into a decision, whether the signal is a sensor stream, a futures curve, or a pile of unstructured documents.',
-    },
-    {
-      key: 'CURRENT',
-      body: 'AI Integration & Automation Intern (incoming) at Indago Capital, Research Assistant at the UbiComp Lab, and TA for EE 201 (Computer Hardware Skills) at UW.',
-    },
-  ],
 }
 
-export interface BoardBlock {
-  role: 'INPUT' | 'PROCESS' | 'OUTPUT'
-  ref: string
-  body: string
-  /** One extra sentence, revealed on hover/focus (desktop only). */
-  tooltip: string
-}
+/** Small plain-text proof line under the hero. */
+export const proof = [
+  'First author, ACM UIST ’26 demo',
+  '10+ Claude skills shipped at Indago',
+  '2,500+ UW students on Questra',
+  'Desk tools at Macquarie CGM',
+]
 
-export interface BoardFigure {
+/* ── Case study model ───────────────────────────────────────────────── */
+
+export interface Figure {
   src: string
   alt: string
   caption: string
-  /** Intrinsic pixel size of the optimized asset; reserves layout space so
-   *  lazy-loading never shifts the page under an in-flight anchor scroll. */
   width: number
   height: number
 }
 
-export interface Board {
-  id: string
+/** A labeled empty slot for an asset Aarav still needs to supply. */
+export interface AssetSlot {
+  label: string
+  detail: string
+}
+
+export interface CaseBlock {
+  label: 'Input' | 'Process' | 'Output'
+  body?: string
+  points?: string[]
+}
+
+export interface CaseStudy {
   org: string
   title: string
-  /** 'teaching' renders the lab-notebook checkoff sheet instead of the pipeline diagram. */
-  kind?: 'standard' | 'teaching'
-  /** Small mono annotation under the title (framing notes, e.g. proprietary figures). */
-  note?: string
-  blocks?: [BoardBlock, BoardBlock, BoardBlock]
-  /** Mono annotations on the two connector traces (input→process, process→output). */
-  connectors?: [string, string]
-  impact?: string
-  link?: { href: string; label: string }
-  /** In-block processing visual: quant/ML curves, or the drift monitor for ValueFirst. */
-  visual?: 'convergence' | 'forecast' | 'monitor'
-  figures?: BoardFigure[]
-  /** Board 3's pose overlays are the clearest "signal → structure" image on the site. */
-  figureEmphasis?: boolean
-}
-
-export const boards: Board[] = [
-  {
-    id: 'U1',
-    org: 'MACQUARIE GROUP · COMMODITIES & GLOBAL MARKETS',
-    title: 'Copper Scorecard',
-    note: 'METHODOLOGY & IMPACT ONLY. PERFORMANCE FIGURES STAY ON THE DESK, BY DESIGN',
-    blocks: [
-      {
-        role: 'INPUT',
-        ref: 'J1',
-        body: 'Daily LME 3-month copper futures data plus eight signal families (momentum/technicals, term structure, positioning, exchange open interest, macro/FX/rates, cross-asset, microstructure, and volatility), sourced from Bloomberg and pre-aligned upstream.',
-        tooltip:
-          'Bloomberg-sourced series arrive pre-aligned upstream, so the scorecard consumes a clean daily feature matrix.',
-      },
-      {
-        role: 'PROCESS',
-        ref: 'U1A',
-        body: 'Per-bucket models (XGBoost, Random Forest, Logistic baseline) trained independently per signal family, validated with rolling-window time-series cross-validation and VIF-based collinearity pruning. Bucket outputs combined through a dynamic weighting scheme that re-ranks each signal family biweekly based on recent predictive accuracy and realized performance, replacing what had been a fixed, hand-tuned rule set.',
-        tooltip:
-          'Rolling-window cross-validation keeps validation honest: every fold trains strictly on the past and scores on unseen future days.',
-      },
-      {
-        role: 'OUTPUT',
-        ref: 'P1',
-        body: 'A daily 0–100 conviction score for the London metals desk, with full bucket-level transparency (which signal families are driving the call, and why) rather than a black-box number. Delivered automatically each morning ahead of market open via an automated Dataiku pipeline.',
-        tooltip:
-          'The score lands before London market open every morning, with no manual steps left in the loop.',
-      },
-    ],
-    connectors: ['8 SIGNAL FAMILIES', 'SCORE 0–100'],
-    impact:
-      'Adopted with strong engagement from the trading desk; drew cross-desk interest from other commodity teams evaluating similar approaches.',
-    visual: 'convergence',
-  },
-  {
-    id: 'U2',
-    org: 'MACQUARIE GROUP · COMMODITIES & GLOBAL MARKETS',
-    title: 'Livestock Exports Forecasting',
-    note: 'METHODOLOGY & IMPACT ONLY, MATCHING BOARD U1’S FRAMING',
-    blocks: [
-      {
-        role: 'INPUT',
-        ref: 'J2',
-        body: 'Weekly USDA export shipment data (cattle and pork, by country) used as a real-time proxy, reconciled against official U.S. Customs monthly totals: the ground truth, which arrives with a two-month reporting lag.',
-        tooltip:
-          'Weekly USDA shipments act as the fast, noisy proxy; monthly customs totals are the slow ground truth the model reconciles against.',
-      },
-      {
-        role: 'PROCESS',
-        ref: 'U2A',
-        body: 'A SARIMAX model per country, using customs data as the endogenous series and aggregated USDA weekly data as an exogenous leading indicator, chosen for its ability to capture seasonal export cycles while incorporating a real-time signal. Parameters tuned via grid search and validated with expanding-window backtesting to simulate genuine real-time forecasting conditions.',
-        tooltip:
-          'Expanding-window backtesting only ever scores the model on data it could genuinely have seen at forecast time.',
-      },
-      {
-        role: 'OUTPUT',
-        ref: 'P2',
-        body: 'Monthly country-level and aggregate export forecasts, “nowcasting” trade volumes roughly two months ahead of official government data, delivered to the Agriculture Trading Desk as a recurring scorecard ahead of position discussions.',
-        tooltip:
-          'The scorecard recurs on a cadence timed to land ahead of the desk’s position discussions.',
-      },
-    ],
-    connectors: ['WEEKLY PROXY', 'T−2 MO NOWCAST'],
-    impact:
-      'Gave traders early visibility into export-driven supply shifts, directly informing forward curve expectations, basis spread analysis, and position sizing ahead of official data releases.',
-    visual: 'forecast',
-  },
-  {
-    id: 'U3',
-    org: 'UBICOMP LAB · PAUL G. ALLEN SCHOOL, UW',
-    title: 'Fingertip IMU Hand Posture Reconstruction',
-    blocks: [
-      {
-        role: 'INPUT',
-        ref: 'J3',
-        body: 'Four nail-mounted IMU sensors (12 raw channels: 4 sensors × 3 axes), tracking hand motion during natural finger movements, aligned against MediaPipe video-based ground truth via a start/end pinch synchronization protocol.',
-        tooltip:
-          'A start/end pinch gesture bookends each session, giving a clean synchronization anchor between IMU streams and video.',
-      },
-      {
-        role: 'PROCESS',
-        ref: 'U3A',
-        body: 'A progression of models (MLP, Residual MLP, Temporal CNN, tree-based baselines) mapping 12 sensor inputs to 63 landmark coordinates (21 joints × 3D), trained on a 2,377-sample aligned pose dataset. Two refinements drove the biggest gains: 8x physics-consistent data augmentation, and a structure-aware loss enforcing constant bone length and correct joint-to-joint direction, not just coordinate-wise accuracy.',
-        tooltip:
-          'The structure-aware loss penalizes broken bone lengths and wrong joint directions, not just coordinate error.',
-      },
-      {
-        role: 'OUTPUT',
-        ref: 'P3',
-        body: 'Full 3D hand posture reconstructed from four fingertip sensors alone, reaching 1.74cm average joint error, accurate enough that predicted and ground-truth hand skeletons visually overlap almost exactly.',
-        tooltip:
-          'The pose-overlay plot below is actual model output: blue is predicted, red is ground truth.',
-      },
-    ],
-    connectors: ['12 CH RAW', '63 COORDS / 21 JOINTS'],
-    impact:
-      'Beyond the modeling result, the project reached a genuine research insight: after structure-aware training and deeper architectures, further gains plateaued, pointing to data quality, not model complexity, as the real bottleneck. That diagnosis led directly to a follow-up dual-camera stereo capture protocol design (calibrated triangulation, per-joint dynamic camera weighting, reprojection-error quality gates) for the next phase.',
-    figures: [
-      {
-        src: poseOverlay,
-        width: 1100,
-        height: 979,
-        alt: '3D plot of a predicted hand skeleton in blue overlapping the ground-truth skeleton in red',
-        caption: 'FIG U3.1 · PREDICTED SKELETON (BLUE) VS GROUND TRUTH (RED), 1.74CM AVG JOINT ERROR',
-      },
-      {
-        src: ubicompDevice,
-        width: 900,
-        height: 1200,
-        alt: 'Hand resting on a table with small flexible circuit sensors mounted on two fingernails',
-        caption: 'FIG U3.2 · NAIL-MOUNTED IMU SENSORS, AS WORN',
-      },
-    ],
-    figureEmphasis: true,
-  },
-  {
-    id: 'U4',
-    org: 'VALUEFIRST · SOFTWARE ENGINEERING INTERNSHIP',
-    title: 'LLM Chatbot Quality Monitoring',
-    blocks: [
-      {
-        role: 'INPUT',
-        ref: 'J4',
-        body: 'A high-volume, unlabeled stream of real user activity: 100K+ weekly conversations across 6 enterprise chatbot deployments, with no existing system to catch quality drift or failure modes as they happened.',
-        tooltip:
-          'Six enterprise deployments, each with its own clients and failure modes, and none of it labeled.',
-      },
-      {
-        role: 'PROCESS',
-        ref: 'U4A',
-        body: 'Built a FastAPI-based analytics dashboard to monitor conversation quality across all deployments, then used it to run controlled, iterative improvements: prompt versioning and A/B-tested deployments rather than one-off fixes, so changes could be validated before they reached all users.',
-        tooltip:
-          'Prompt changes shipped as versioned, A/B-tested deployments, so every fix was validated before all users saw it.',
-      },
-      {
-        role: 'OUTPUT',
-        ref: 'P4',
-        body: 'A working monitoring and iteration system that surfaced drift and client-specific regressions early, and measurably improved the product: chatbot response quality up 15%, latency stabilized by 20%.',
-        tooltip:
-          'Drift and client-specific regressions surfaced while they were still small, not after users noticed.',
-      },
-    ],
-    connectors: ['100K+ CONVS / WK', 'QUALITY +15%'],
-    impact:
-      'Turned a black-box, high-volume system into something observable and improvable, the same instinct that shows up in the trading-desk work: don’t ship a model or a system you can’t explain the behavior of.',
-    visual: 'monitor',
-  },
-  {
-    id: 'U5',
-    org: 'DEPT. OF ELECTRICAL & COMPUTER ENGINEERING, UW',
-    title: 'Teaching Assistant, EE 201',
-    kind: 'teaching',
-  },
-  {
-    id: 'U6',
-    org: 'INDEPENDENT PROJECT · EDGE ML',
-    title: 'PocketBirdNET',
-    blocks: [
-      {
-        role: 'INPUT',
-        ref: 'J6',
-        body: 'Raw audio captured on-device.',
-        tooltip:
-          'Audio is captured and classified entirely on the microcontroller; nothing leaves the device for inference.',
-      },
-      {
-        role: 'PROCESS',
-        ref: 'U6A',
-        body: 'Knowledge distillation compresses the ~50MB BirdNET teacher model down to a 60KB INT8-quantized student model, roughly an 800x size reduction, small enough to deploy directly on an Arduino Nano 33 BLE Sense.',
-        tooltip:
-          'Distillation trains the tiny student to match the teacher’s output distribution rather than learning from labels alone.',
-      },
-      {
-        role: 'OUTPUT',
-        ref: 'P6',
-        body: 'Live bird species classification displayed on an onboard SSD1306 screen, with results also streamed to a Web Bluetooth dashboard.',
-        tooltip:
-          'The Web Bluetooth dashboard needs no app install; a compatible browser connects straight to the board.',
-      },
-    ],
-    connectors: ['AUDIO IN', '60KB INT8'],
-    impact:
-      'A full edge-ML pipeline, from a large teacher model down to a microcontroller-sized deployment, running real-time inference entirely on embedded hardware.',
-    link: { href: 'https://pocketbirdnet.vercel.app/', label: 'LIVE DASHBOARD' },
-    figures: [
-      {
-        src: birdnetDevice,
-        width: 1048,
-        height: 640,
-        alt: 'Breadboard circuit with a small LCD screen reading American Robin, score 99%',
-        caption: 'FIG U6.1 · ON-DEVICE CLASSIFICATION, ONBOARD READOUT',
-      },
-      {
-        src: birdnetWebapp,
-        width: 1000,
-        height: 688,
-        alt: 'PocketBirdNET web dashboard showing a detected American Robin at 78% confidence',
-        caption: 'FIG U6.2 · WEB BLUETOOTH DASHBOARD, LIVE STREAM',
-      },
-    ],
-  },
-  {
-    id: 'U7',
-    org: 'CO-FOUNDED STARTUP · QUESTRA-AI.COM',
-    title: 'Questra AI',
-    note: 'SOURCES REAL PAST EXAM QUESTIONS. GENERATES NOTHING',
-    blocks: [
-      {
-        role: 'INPUT',
-        ref: 'J7',
-        body: 'A large, multi-format archive of authentic past exam papers and course materials from UW, spanning many courses, where the same course can be taught by different professors, each with their own distinct question style, emphasis, and exam format.',
-        tooltip:
-          'The same UW course can look completely different across professors; the archive preserves each professor’s style rather than flattening it.',
-      },
-      {
-        role: 'PROCESS',
-        ref: 'U7A',
-        body: 'A full-stack system (FastAPI + React + Supabase, AWS-backed) parses and organizes the archive. A GPT-based classifier trained on 5,000+ image-based questions (achieving over 92% accuracy) tags each archived question by course, professor, and topic, turning an unstructured pile of past papers into a searchable, filterable bank without generating any new questions.',
-        tooltip:
-          'The classifier only tags and organizes archived questions; it never generates new ones.',
-      },
-      {
-        role: 'OUTPUT',
-        ref: 'P7',
-        body: 'A student picks their exact course, professor, and the specific topics they’re weak on, and Questra returns a custom question bank pulled entirely from real, previously-used exam questions matching that professor’s actual style: targeted practice sourced authentically from the archive, not invented.',
-        tooltip:
-          'Filters compose: exact course, specific professor, and the topics a student is weak on, answered in under two seconds.',
-      },
-    ],
-    connectors: ['RAW ARCHIVE', 'FILTERED BANK'],
-    impact:
-      'Co-founded with Hemil Patel; scaled to 2,500+ active UW users with sub-2-second response times. Shipped and actively used, not just a prototype.',
-    link: { href: 'https://questra-ai.com/', label: 'QUESTRA-AI.COM' },
-    figures: [
-      {
-        src: questraUi,
-        width: 1400,
-        height: 781,
-        alt: 'Questra practice interface with course, topic, and professor filters in a sidebar',
-        caption: 'FIG U7.1 · PRACTICE INTERFACE: COURSE / TOPIC / PROFESSOR FILTERS',
-      },
-    ],
-  },
-  {
-    id: 'U8',
-    org: 'INDEPENDENT RESEARCH · LLM EVALUATION',
-    title: 'Style-Aware LLM Ranking',
-    blocks: [
-      {
-        role: 'INPUT',
-        ref: 'J8',
-        body: 'A large-scale human preference dataset of pairwise LLM battles: 65K+ human-labeled win/loss/tie outcomes across 20+ models, with full transcripts and metadata (token counts, formatting stats, language, turn counts).',
-        tooltip:
-          'The metadata (token counts, formatting stats, language, turn counts) is exactly the stylistic surface the analysis isolates.',
-      },
-      {
-        role: 'PROCESS',
-        ref: 'U8A',
-        body: 'A baseline Bradley–Terry logistic regression model establishes a standard leaderboard from raw pairwise preferences. Analysis reveals response length has a stronger effect on rank than most model-identity coefficients, meaning verbosity alone was inflating scores. The model is extended to jointly learn intrinsic model strength and independent stylistic effects (length, list usage, headers, bold formatting), with bootstrapped confidence intervals quantifying ranking stability.',
-        tooltip:
-          'Jointly learning strength and style means verbosity can no longer masquerade as capability in the fit.',
-      },
-      {
-        role: 'OUTPUT',
-        ref: 'P8',
-        body: 'A style-controlled leaderboard where some models drop after length is controlled for (revealing style inflation) and others rise (revealing understated intrinsic strength), effects invisible in standard leaderboards, plus per-category breakdowns showing model strengths vary by task type.',
-        tooltip:
-          'Some models drop once length is controlled for; others rise. A standard leaderboard cannot show either movement.',
-      },
-    ],
-    connectors: ['65K+ BATTLES', 'STYLE-CONTROLLED RANKS'],
-    impact:
-      'Demonstrates that presentation can masquerade as capability in the leaderboards influencing LLM deployment and research direction, and provides a reproducible method to correct for it.',
-    link: {
-      href: 'https://github.com/aarav-wadhwani/style-aware-llm-ranking',
-      label: 'GITHUB / SOURCE',
-    },
-    figures: [
-      {
-        src: llmCoefficients,
-        width: 1280,
-        height: 501,
-        alt: 'Plot of style feature coefficients with confidence intervals; response length is dominant',
-        caption: 'FIG U8.1 · STYLE FEATURE COEFFICIENTS: LENGTH DOMINATES',
-      },
-      {
-        src: llmRankingComparison,
-        width: 1280,
-        height: 611,
-        alt: 'Heatmap comparing model ranks with and without style control; several models shift rank',
-        caption: 'FIG U8.2 · RANKING COMPARISON, WITH VS WITHOUT STYLE CONTROL',
-      },
-      {
-        src: llmPerCategory,
-        width: 950,
-        height: 640,
-        alt: 'Heatmap of overall and per-category model ranks across code, creativity, math and more',
-        caption: 'FIG U8.3 · PER-CATEGORY RANKS ACROSS TASK TYPES',
-      },
-    ],
-  },
-
-  /* ──────────────────────────────────────────────────────────────────────
-   * TEMPLATE, duplicate this block to add a new component board.
-   * Copy it above this comment, give it the next id (U9, U10, …), and it
-   * will render with the same shell, connectors, and reveal treatment.
-   * (Set kind: 'teaching' only for checkoff-sheet style boards; their extra
-   * content lives in the `teaching` export below.)
-   *
-   * {
-   *   id: 'U9',
-   *   org: 'ORG / CONTEXT · MONO, UPPERCASE',
-   *   title: 'Project Title',
-   *   note: 'OPTIONAL SMALL FRAMING NOTE',        // omit if not needed
-   *   blocks: [
-   *     { role: 'INPUT',   ref: 'J9',  body: 'What goes in.',        tooltip: 'One extra sentence on hover.' },
-   *     { role: 'PROCESS', ref: 'U9A', body: 'What happens to it.',  tooltip: 'One extra sentence on hover.' },
-   *     { role: 'OUTPUT',  ref: 'P9',  body: 'What comes out.',      tooltip: 'One extra sentence on hover.' },
-   *   ],
-   *   connectors: ['IN ANNOTATION', 'OUT ANNOTATION'],
-   *   impact: 'Why it mattered.',
-   *   link: { href: 'https://…', label: 'LINK LABEL' },              // optional
-   *   visual: 'convergence' | 'forecast' | 'monitor',                // optional in-block curve
-   *   figures: [{ src: imported, alt: '…', caption: 'FIG U9.1 · …' }], // optional images
-   *   figureEmphasis: true,                                          // optional: render figures larger
-   * },
-   * ────────────────────────────────────────────────────────────────────── */
-]
-
-/** Extra content for the EE 201 teaching board (kind: 'teaching'). */
-export const teaching = {
-  sheetTitle: 'LAB CHECKOFF RECORD',
-  sheetMeta: 'EE 201 · COMPUTER HARDWARE SKILLS · 2 QUARTERS · 4 SECTIONS · ~96 STUDENTS',
-  context:
-    'EE 201 is where UW ECE students meet real hardware for the first time. Over two quarters and four lab sections, I taught roughly 96 students to solder, breadboard, read an oscilloscope, program an Arduino, and build a line-following robot from parts and confusion. Most of them had never held a soldering iron before this class.',
-  checklist: [
-    'Soldering',
-    'Breadboarding',
-    'Oscilloscope',
-    'Arduino programming',
-    'Line-following robot',
-  ],
-  method: {
-    key: 'CHECKOFF PROTOCOL',
-    body: 'Checkoffs ran as conversations, not signoffs. Before a group could move on, they had to explain what they had just built and why it worked, then got either confirmation or a correction to their mental model. That caught misunderstandings early, instead of three weeks later in a broken robot.',
-  },
-  debug: {
-    key: 'DEBUG LOG',
-    body: 'The other half of the job was hands-on debugging alongside students: desoldering mistakes, dead motors, mis-sized PCBs, untested photoresistors. The tools stayed in their hands the whole time.',
-  },
-  ratings: {
-    headline: '4.8–4.9 / 5.0',
-    detail: 'SUMMATIVE RATINGS, ALL FOUR SECTIONS · LAB INSTRUCTOR EFFECTIVENESS RATED UP TO 4.9',
-  },
-  testimonials: [
-    {
-      tag: 'STUDENT EVAL · VERBATIM',
-      quote:
-        'Overall, I’m very happy to have met and had Aarav as my TA in this class. I always appreciated his willingness to ask questions to my group during lab checkoffs, since it helps students be able to explain what they have just done in the lab in a conversational setting, and then he would either confirm our explanations were accurate, or give useful feedback on where we thought wrong. His debugging skills were very impressive whenever my group faced challenges while developing our robot cart, such as desoldering difficulties and motor issues. Well done Aarav.',
-    },
-    {
-      tag: 'STUDENT EVAL · VERBATIM',
-      quote:
-        'I thought the TA was super helpful, and he always brought good energy and enthusiasm to the labs. You can tell he knows what he is talking about, and he offers a lot of general advice.',
-    },
-  ],
-  closing:
-    'Explaining a copper-futures model to a trading desk and explaining an oscilloscope to a first-year turn out to be the same skill: finding the one sentence that makes an unfamiliar thing click. That shaped how everything else on this site got scoped. If it can’t be explained clearly to someone seeing it for the first time, it isn’t understood well enough yet.',
-}
-
-/**
- * Power Rail: the experience timeline that doubles as the site index.
- * Each item links down to its board(s); Indago has no board yet.
- */
-export interface RailItem {
-  id: string
   role: string
-  org: string
   dates: string
   location?: string
-  incoming?: boolean
-  /** One-line preview revealed on hover (always visible on touch). */
-  preview: string
-  /** Board sections this node jumps to; first target is the primary one. */
-  targets?: { boardId: string; label: string }[]
+  tags: string[]
+  /** Framing line shown at the top of the case (for example a confidentiality note). */
+  note?: string
+  blocks: [CaseBlock, CaseBlock, CaseBlock]
+  impact: string
+  /** One small headline metric with its label, where the Fact Sheet has one. */
+  metric?: { value: string; label: string }
+  visual?: 'indago-flow' | 'convergence' | 'forecast'
+  /** Named tools, rendered as a compact two-column list. */
+  catalog?: { heading: string; items: { name: string; does: string }[]; more?: string }
+  figures?: Figure[]
+  slot?: AssetSlot
+  links?: { href: string; label: string }[]
 }
 
-export const rail: RailItem[] = [
+export interface Deployment {
+  /** Anchor id: aaravwadhwani.vercel.app/#indago opens this row. */
+  id: string
+  client: string
+  team: string
+  shipped: string
+  dates: string
+  /** live = amber dot (in use or ongoing); otherwise a neutral completed dot. */
+  status: { label: string; live: boolean }
+  caseStudy: CaseStudy
+}
+
+/* ── The deployment ledger ──────────────────────────────────────────── */
+
+export const deployments: Deployment[] = [
   {
-    id: 'V1',
-    role: 'AI Integration & Automation Intern',
-    org: 'Indago Capital',
-    dates: 'JUL 2026 – SEP 2026',
-    location: 'NEW YORK, NY',
-    incoming: true,
-    preview:
-      'RAG knowledge base, deal memo drafting, LP reporting automation, deal screening. Board pending.',
+    id: 'indago',
+    client: 'Indago Capital',
+    team: 'BD and deal team',
+    shipped: '10+ Claude skills, a DealCloud connector, a deal wiki',
+    dates: 'Jul to Sep 2026',
+    status: { label: 'In use', live: true },
+    caseStudy: {
+      org: 'Indago Capital',
+      title: 'AI tooling for a non-technical deal team',
+      role: 'AI Solutions Engineering Intern',
+      dates: 'Jul to Sep 2026',
+      location: 'New York',
+      tags: ['Claude skills', 'Connectors', 'RAG', 'DealCloud', 'Microsoft 365', 'Snowflake'],
+      note: 'Methodology only. No client or deal data.',
+      blocks: [
+        {
+          label: 'Input',
+          body: 'A non-technical business development and deal team at an asset-based finance firm. Their work runs through DealCloud, Outlook, SharePoint, Snowflake and deal data rooms.',
+        },
+        {
+          label: 'Process',
+          points: [
+            'Built an in-house DealCloud connector so the BD team can read, create and update CRM records in batches from Claude, in place of a paid vendor integration.',
+            'Configured the Microsoft 365 connector firm-wide: search Outlook, consolidate SharePoint notes, and upload to SharePoint from Claude.',
+            'Wrote 10+ Claude skills for BD, plus skills for deal memo drafting and LP reporting.',
+            'Built the deal wiki: each data room is ingested once into a linked markdown knowledge base on SharePoint, enriched with email, meeting notes, Snowflake and DealCloud context, then queried and updated through three Claude skills (ingest, query, update).',
+            'Built a quantitative relative value and risk based pricing framework for evaluating asset-based finance deals.',
+            'Built a RAG-based internal knowledge base, and evaluated AI vendors and RAG platforms for the firm’s tooling strategy.',
+          ],
+        },
+        {
+          label: 'Output',
+          points: [
+            'Firm Dossier is now used before every meeting.',
+            'Cumulative Brief was generated programmatically for all 488 prospect companies.',
+            'A Granola notes recipe for BD meeting notes, and an interactive fundraise pipeline dashboard.',
+          ],
+        },
+      ],
+      impact:
+        'The team is non-technical, so everything runs in Claude chat. Nobody on the deal team touches code.',
+      visual: 'indago-flow',
+      catalog: {
+        heading: 'Skills the BD team runs',
+        items: [
+          {
+            name: 'Contact Enrichment',
+            does: 'A name and company list becomes one enriched spreadsheet using Outlook, DealCloud and the web, flagging existing records and prior correspondence.',
+          },
+          {
+            name: 'Firm Dossier',
+            does: 'A branded pre-meeting document combining internal history, firm research and attendee bios.',
+          },
+          {
+            name: 'Cumulative Brief',
+            does: 'Consolidates all past meetings and email with a company into one record.',
+          },
+          {
+            name: 'Mail Merge',
+            does: 'Personalized Outlook drafts as replies to existing threads, pulling recipients from DealCloud by LP category and product.',
+          },
+        ],
+        more: 'Also: Status Update, Bounce-Back Recovery, Individual Summary, and DC Add Contact / Add Company for batch CRM entry without complex prompting.',
+      },
+    },
   },
   {
-    id: 'V2',
-    role: 'Quantitative Research Intern',
-    org: 'Macquarie Group, Commodities & Global Markets',
-    dates: 'JUL 2025 – SEP 2025',
-    preview:
-      'Two boards: a daily copper conviction score and a livestock export nowcast for global trading desks.',
-    targets: [
-      { boardId: 'U1', label: 'U1 · COPPER' },
-      { boardId: 'U2', label: 'U2 · LIVESTOCK' },
-    ],
+    id: 'copper',
+    client: 'Macquarie CGM',
+    team: 'Metals desk',
+    shipped: 'Daily copper conviction score',
+    dates: 'Jul to Sep 2025',
+    status: { label: 'Delivered', live: false },
+    caseStudy: {
+      org: 'Macquarie Group, Commodities and Global Markets',
+      title: 'Copper Scorecard',
+      // D1: official title per LinkedIn.
+      role: 'Commodities and Global Markets Intern',
+      dates: 'Jul to Sep 2025',
+      location: 'Gurugram',
+      tags: ['XGBoost', 'Random Forest', 'Time-series CV', 'Dataiku'],
+      note: 'Quant modeling for the metals desk. Methodology first.',
+      blocks: [
+        {
+          label: 'Input',
+          body: 'LME 3-month copper futures, described by 8 signal families: momentum and technicals, term structure, positioning, exchange open interest, macro / FX / rates, cross-asset, microstructure, and volatility.',
+        },
+        {
+          label: 'Process',
+          body: 'Per-family XGBoost, Random Forest and logistic baseline models, validated with rolling-window time-series cross-validation and pruned with VIF. The signal families are re-weighted dynamically on a biweekly cycle.',
+        },
+        {
+          label: 'Output',
+          body: 'A daily 0–100 conviction score, delivered each morning before London open through an automated Dataiku pipeline.',
+        },
+      ],
+      // D2: one small public number, methodology framing kept.
+      metric: { value: '71%', label: 'directional accuracy' },
+      impact:
+        'Across the internship: 6+ Dataiku pipelines, strategy turnaround time cut by 60%, and work with desks in London, Singapore and Hong Kong.',
+      visual: 'convergence',
+    },
   },
   {
-    id: 'V3',
-    role: 'Research Assistant',
-    org: 'Ubiquitous Computing Lab, Paul G. Allen School, UW',
-    dates: 'JAN 2026 – PRESENT',
-    preview:
-      'Full 3D hand posture from four nail-mounted IMUs, reaching 1.74cm average joint error.',
-    targets: [{ boardId: 'U3', label: 'U3 · HAND POSTURE' }],
+    id: 'livestock',
+    client: 'Macquarie CGM',
+    team: 'Agriculture desk',
+    shipped: 'Livestock export nowcast',
+    dates: 'Jul to Sep 2025',
+    status: { label: 'Delivered', live: false },
+    caseStudy: {
+      org: 'Macquarie Group, Commodities and Global Markets',
+      title: 'Livestock exports nowcast',
+      role: 'Commodities and Global Markets Intern',
+      dates: 'Jul to Sep 2025',
+      location: 'Gurugram',
+      tags: ['SARIMAX', 'Backtesting', 'Grid search'],
+      note: 'Quant modeling for the agriculture desk. Methodology first.',
+      blocks: [
+        {
+          label: 'Input',
+          body: 'Customs data as the endogenous series, with weekly USDA shipments as an exogenous leading indicator.',
+        },
+        {
+          label: 'Process',
+          body: 'A SARIMAX model per country, tuned by grid search and validated with expanding-window backtests.',
+        },
+        {
+          label: 'Output',
+          body: 'Nowcasts about two months ahead of official data, for the agriculture desk.',
+        },
+      ],
+      metric: { value: 'Under 5%', label: 'MAPE across 10 markets' },
+      impact:
+        'The desk sees export volumes about two months before the official figures are published.',
+      visual: 'forecast',
+    },
   },
   {
-    id: 'V4',
-    role: 'Software Engineering Intern',
-    org: 'ValueFirst',
-    dates: 'JUL 2024 – SEP 2024',
-    preview:
-      'Quality monitoring and A/B iteration across 100K+ weekly enterprise chatbot conversations.',
-    targets: [{ boardId: 'U4', label: 'U4 · LLM MONITORING' }],
-  },
-  {
-    id: 'V5',
-    role: 'Teaching Assistant',
-    org: 'Dept. of Electrical & Computer Engineering, UW',
-    dates: 'DEC 2025 – PRESENT',
-    preview:
-      'EE 201 lab sections: soldering, oscilloscopes, Arduinos, and ratings holding at 4.8–4.9 / 5.0.',
-    targets: [{ boardId: 'U5', label: 'U5 · EE 201' }],
+    id: 'nailsense',
+    client: 'UW UbiComp Lab',
+    team: 'Research',
+    shipped: 'NailSense, ACM UIST ’26 demo',
+    dates: 'Jan 2026 to present',
+    status: { label: 'Ongoing', live: true },
+    caseStudy: {
+      org: 'UW UbiComp Lab, Paul G. Allen School',
+      title: 'NailSense: whole-hand posture from four nail stickers',
+      role: 'Undergraduate Research Assistant',
+      dates: 'Jan 2026 to present',
+      location: 'Seattle',
+      tags: ['Wearable ML', 'BLE', 'Flexible PCB', 'Computer vision'],
+      note: 'First author, ACM UIST ’26 demo. PI: Prof. Qiuyue (Shirley) Xue.',
+      blocks: [
+        {
+          label: 'Input',
+          body: 'Four nail stickers on the thumb, index, middle and ring fingers. Each is a 10 × 9 mm flexible PCB with a 3-axis accelerometer and MCU, streaming at 100 Hz over Bluetooth Low Energy. Finger pads, palm and wrist stay free.',
+        },
+        {
+          label: 'Process',
+          body: 'A model turns one second of all 12 signals into 21 3D hand joints. Cameras (dual-camera stereo, MediaPipe, ChArUco calibration, triangulation) are used only to label training data.',
+        },
+        {
+          label: 'Output',
+          body: '8.91 mm average joint error for a new user, 5.97 mm personalized (PA-MPJPE), and 93.4% gesture classification.',
+        },
+      ],
+      impact:
+        'Demo applications: live 3D hand rendering, ASL to voice translation in real time, and gesture-controlled music.',
+      links: [{ href: '#research', label: 'Publication details' }],
+    },
   },
 ]
 
-/** Proficiency: 3 = proficient, 2 = moderate, 1 = familiar. */
-export interface SkillLevel {
+/* ── How I work ─────────────────────────────────────────────────────── */
+
+export const howIWork = [
+  {
+    title: 'Sit with the team.',
+    body: 'Learn the workflow from the people doing it, not from a spec.',
+    evidence:
+      'At Indago I was embedded with a non-technical BD and deal team. At Macquarie I worked with desks in London, Singapore and Hong Kong.',
+  },
+  {
+    title: 'Find the step that hurts.',
+    body: 'Pick the one with the clearest payoff and the least ambiguity.',
+    evidence:
+      'The DealCloud connector lets the BD team read, create and update CRM records in batches from Claude, in place of a paid vendor integration.',
+  },
+  {
+    title: 'Ship something small that week.',
+    body: 'Put it where the team already works.',
+    evidence:
+      'The deal wiki runs on three Claude skills (ingest, query, update), so a non-technical deal team never touches code.',
+  },
+  {
+    title: 'Measure use, then harden.',
+    body: 'Fold feedback in, and document so it survives handoff.',
+    evidence:
+      'Firm Dossier is now used before every meeting, and Cumulative Brief was generated for all 488 prospect companies.',
+  },
+]
+
+/* ── Research ───────────────────────────────────────────────────────── */
+
+export const publication = {
+  label: 'First author, ACM UIST ’26 demo',
+  title:
+    'Demo of NailSense: Unobtrusive Wireless Smart Nail Stickers for Whole-Hand Posture Tracking',
+  venue:
+    'UIST Adjunct ’26: Adjunct Proceedings of the 39th Annual ACM Symposium on User Interface Software and Technology, Article 158, pp. 1–3.',
+  published: '13 Nov 2026',
+  datePublished: '2026-11-13',
+  doi: 'https://doi.org/10.1145/3830397.3842456',
+  doiLabel: '10.1145/3830397.3842456',
+  authors: [
+    { name: 'Aarav Wadhwani', self: true },
+    { name: 'Jiayi Shao' },
+    { name: 'Rishabh L Goenka' },
+    { name: 'Zhenyang Fu' },
+    { name: 'Xiyuan Shen' },
+    { name: 'Qiuyue (Shirley) Xue' },
+  ],
+  affiliations: 'University of Washington and Purdue University',
+  // TODO(aarav): D6. Sticker weight omitted (poster says 0.65 g, paper says 0.39 g).
+  specs: ['10 × 9 mm flexible PCB', '100 Hz over BLE', '18 h on a 14.5 mAh cell'],
+  battery: 'An estimated 14 days of use at 30 minutes a day.',
+  results: [
+    { value: '8.91 mm', label: 'average joint error, new user' },
+    { value: '5.97 mm', label: 'personalized (PA-MPJPE)' },
+    { value: '93.4%', label: 'gesture classification' },
+  ],
+  demos: 'Live 3D hand rendering, ASL to voice translation in real time, and gesture-controlled music.',
+  figure: {
+    src: nailsenseDevice,
+    alt: 'A hand resting on a table with small flexible circuit stickers on two fingernails',
+    caption: 'Nail stickers as worn.',
+    width: 900,
+    height: 1200,
+  } as Figure,
+  // TODO(aarav): D8. Add the poster pipeline figure or demo photos to assets-src/.
+  slot: {
+    label: 'Figure slot: NailSense poster pipeline or demo photo',
+    detail: 'Add the file to assets-src/ and reference it in site.ts.',
+  } as AssetSlot,
+}
+
+export const llmStudy = {
+  title: 'Style-aware LLM ranking',
+  kind: 'Independent research',
+  summary:
+    'Human preference leaderboards reward how a model writes, not only what it knows. Using 65K+ human pairwise battles across 20+ models, a Bradley–Terry baseline shows response length has a stronger effect on rank than most model-identity coefficients.',
+  method:
+    'I extended the model to learn strength and style jointly (length, lists, headers, bold), with bootstrapped confidence intervals and per-category breakdowns.',
+  link: {
+    href: 'https://github.com/aarav-wadhwani/style-aware-llm-ranking',
+    label: 'Code on GitHub',
+  },
+  figures: [
+    {
+      src: llmCoefficients,
+      alt: 'Dot plot of four style feature coefficients with confidence intervals. Response length is far larger than list, bold or header counts.',
+      caption: 'Style coefficients: length dominates.',
+      width: 1280,
+      height: 501,
+    },
+    {
+      src: llmRankingComparison,
+      alt: 'Heatmap of model ranks with and without style control. Several models move up or down once style is controlled for.',
+      caption: 'Ranks with and without style control.',
+      width: 1280,
+      height: 611,
+    },
+  ] as Figure[],
+}
+
+/* ── Builds, earlier work, teaching ─────────────────────────────────── */
+
+export interface Build {
   name: string
-  level: 1 | 2 | 3
+  role: string
+  body: string
+  stack?: string
+  link?: { href: string; label: string }
+  figure?: Figure
+  slot?: AssetSlot
 }
 
-export const skills = {
-  languages: {
-    ref: 'L1',
-    category: 'LANGUAGES',
-    items: [
-      { name: 'Python', level: 3 },
-      { name: 'SQL', level: 3 },
-      { name: 'Java', level: 2 },
-      { name: 'JavaScript', level: 2 },
-      { name: 'R', level: 2 },
-      { name: 'C++', level: 1 },
-      { name: 'SystemVerilog', level: 1 },
-    ] as SkillLevel[],
+export const builds: Build[] = [
+  {
+    name: 'Questra AI',
+    role: 'Co-founder with Hemil Patel, Apr 2024 to Feb 2026',
+    // TODO(aarav): D7. "5,000+ image questions", "over 92% accuracy" and
+    // "sub-2-second responses" are left out until you confirm them.
+    body: 'Sorts real past UW exam questions by course, professor and topic with a GPT-based classifier. It generates nothing. Launched for 5 UW math courses and used by 2,500+ UW students.',
+    stack: 'FastAPI, React, Supabase, AWS',
+    link: { href: 'https://questra-ai.com/', label: 'questra-ai.com' },
+    // TODO(aarav): D8. The old screenshot showed an error banner and is not used.
+    slot: {
+      label: 'Screenshot slot: Questra practice view',
+      detail: 'Add a new capture as assets-src/questra-ui.png.',
+    },
   },
-  modeling: {
-    ref: 'M1',
-    category: 'MODELING',
-    items: [
-      'Classification',
-      'Regression',
-      'Time series forecasting',
-      'Feature engineering',
-      'Dimensionality reduction (PCA)',
-    ],
+  {
+    name: 'PocketBirdNET',
+    role: 'Edge ML build',
+    body: 'Distills the ~50 MB BirdNET model into a 60 KB INT8 student (about 800× smaller) running on an Arduino Nano 33 BLE Sense, with an SSD1306 readout and a Web Bluetooth dashboard.',
+    link: { href: 'https://pocketbirdnet.vercel.app/', label: 'pocketbirdnet.vercel.app' },
+    figure: {
+      src: birdnetDevice,
+      alt: 'Breadboard circuit with a small LCD reading American Robin, score 99%',
+      caption: 'On-device classification.',
+      width: 1048,
+      height: 640,
+    },
   },
-  tools: {
-    ref: 'T1',
-    category: 'DATA & TOOLS',
-    items: [
-      'FastAPI',
-      'scikit-learn',
-      'XGBoost',
-      'PyTorch',
-      'TensorFlow',
-      'Git',
-      'Docker',
-      'PostgreSQL',
-      'AWS',
-      'Dataiku',
-    ],
+]
+
+// TODO(aarav): D5. Khao (pre-launch) is left off. Add a line here if you want it.
+// TODO(aarav): add links for OneGlance and Food Desert Mapper if you want them clickable.
+export const alsoBuilt = [
+  { name: 'OneGlance', body: 'A portfolio tracker.' },
+  { name: 'Food Desert Mapper', body: 'Maps 1,500+ Washington census tracts.' },
+]
+
+export const earlierWork = [
+  {
+    org: 'ValueFirst',
+    role: 'Software Engineering Intern',
+    dates: 'Jul to Sep 2024',
+    body: 'A FastAPI analytics dashboard monitoring 100K+ weekly conversations across 6 enterprise chatbot deployments, with prompt versioning and A/B-tested rollouts. Response quality up 15%, latency stabilized by 20%.',
   },
+  {
+    org: 'Kernel Labs',
+    role: 'Intern',
+    dates: '2022',
+    body: '',
+  },
+]
+
+export const teaching = {
+  title: 'Teaching Assistant, EE 201 Computer Hardware Skills',
+  org: 'UW Electrical and Computer Engineering',
+  dates: 'Dec 2025 to present',
+  body: 'About 96 students across 4 lab sections and 2 quarters.',
+  rating: { value: '4.8–4.9 / 5.0', label: 'student ratings' },
+  quote:
+    'Overall, I’m very happy to have met and had Aarav as my TA in this class. I always appreciated his willingness to ask questions to my group during lab checkoffs, since it helps students be able to explain what they have just done in the lab in a conversational setting, and then he would either confirm our explanations were accurate, or give useful feedback on where we thought wrong. His debugging skills were very impressive whenever my group faced challenges while developing our robot cart, such as desoldering difficulties and motor issues. Well done Aarav.',
+  secondQuote:
+    'I thought the TA was super helpful, and he always brought good energy and enthusiasm to the labs. You can tell he knows what he is talking about, and he offers a lot of general advice.',
+  why: 'Explaining a copper-futures model to a trading desk and explaining an oscilloscope to a first-year turn out to be the same skill: finding the one sentence that makes an unfamiliar thing click.',
 }
 
-export const contact = {
-  refTag: 'X1 · OUTPUT TERMINAL',
-  heading: 'Signal resolved.',
-  body: 'The trace ends here. Get in touch, or take the datasheet with you.',
-  ports: [
-    { id: 'P1', label: 'RESUME.PDF', href: '/resume/Aarav_Wadhwani_Resume.pdf', download: true },
-    { id: 'P2', label: 'EMAIL', href: 'mailto:aaravw28@uw.edu', detail: 'aaravw28@uw.edu' },
-    { id: 'P3', label: 'LINKEDIN', href: 'https://www.linkedin.com/in/aarav-wadhwani/', external: true },
-    { id: 'P4', label: 'GITHUB', href: 'https://github.com/aarav-wadhwani', external: true },
+/* ── About, skills, contact ─────────────────────────────────────────── */
+
+export const about = {
+  // TODO(aarav): confirm the "New Delhi to Seattle" wording reads the way you want.
+  body: 'I’m from New Delhi and study in Seattle, where I’m finishing a degree in electrical and computer engineering with a minor in data science at the University of Washington.',
+  next: 'I’m looking for 2027 roles in ML engineering, applied AI and forward deployed engineering, and quant or trading technology.',
+  education: [
+    { label: 'Degree', value: 'B.S. Electrical and Computer Engineering, minor in Data Science' },
+    { label: 'School', value: 'University of Washington, Seattle' },
+    { label: 'Dates', value: 'Sep 2023 to Jun 2027 (expected)' },
+    { label: 'GPA', value: '3.85, Dean’s List' },
   ],
 }
+
+export const skills = [
+  {
+    group: 'Applied AI and FDE',
+    items:
+      'Claude (skills, connectors), Model Context Protocol (MCP), RAG, LLM evaluation, prompt versioning and A/B testing, Microsoft 365 / SharePoint, DealCloud, Snowflake',
+  },
+  {
+    group: 'Quant and ML',
+    items:
+      'Time series forecasting (SARIMAX), XGBoost, Random Forest, PyTorch, scikit-learn, TensorFlow, feature engineering, backtesting and time-series CV, signal processing, computer vision (OpenCV, MediaPipe), ONNX',
+  },
+  {
+    group: 'Engineering',
+    items:
+      'Python, SQL, TypeScript / JavaScript, Java, R, C++, FastAPI, React, PostgreSQL / Supabase, Docker, AWS, Dataiku, embedded firmware, BLE, PCB design',
+  },
+]
+
+export const contact = {
+  heading: 'Open to 2027 roles in applied AI, forward deployed engineering, and quant tech.',
+  updated: '14 Nov 2026',
+}
+
+export const nav = [
+  { href: '#work', label: 'Work' },
+  { href: '#how', label: 'How I work' },
+  { href: '#research', label: 'Research' },
+  { href: '#about', label: 'About' },
+]

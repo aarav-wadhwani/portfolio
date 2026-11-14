@@ -1,22 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- AW schematic monogram: IC-chip outline with pin lines, one live (blue) pin -->
-  <rect width="64" height="64" rx="6" fill="#0A0A0B"/>
-  <!-- chip body -->
-  <rect x="14" y="14" width="36" height="36" rx="5" fill="none" stroke="#E8E8E6" stroke-width="2.5"/>
-  <!-- pins: left -->
-  <line x1="6" y1="24" x2="14" y2="24" stroke="#E8E8E6" stroke-width="2.5"/>
-  <line x1="6" y1="32" x2="14" y2="32" stroke="#3B82F6" stroke-width="2.5"/>
-  <line x1="6" y1="40" x2="14" y2="40" stroke="#E8E8E6" stroke-width="2.5"/>
-  <!-- pins: right -->
-  <line x1="50" y1="24" x2="58" y2="24" stroke="#E8E8E6" stroke-width="2.5"/>
-  <line x1="50" y1="32" x2="58" y2="32" stroke="#E8E8E6" stroke-width="2.5"/>
-  <line x1="50" y1="40" x2="58" y2="40" stroke="#E8E8E6" stroke-width="2.5"/>
-  <!-- pins: top -->
-  <line x1="24" y1="6" x2="24" y2="14" stroke="#E8E8E6" stroke-width="2.5"/>
-  <line x1="40" y1="6" x2="40" y2="14" stroke="#E8E8E6" stroke-width="2.5"/>
-  <!-- pins: bottom -->
-  <line x1="24" y1="50" x2="24" y2="58" stroke="#E8E8E6" stroke-width="2.5"/>
-  <line x1="40" y1="50" x2="40" y2="58" stroke="#E8E8E6" stroke-width="2.5"/>
-  <!-- AW monogram, monospace -->
-  <text x="32" y="38" text-anchor="middle" font-family="'JetBrains Mono','SFMono-Regular',Menlo,monospace" font-size="15" font-weight="700" letter-spacing="0.5" fill="#E8E8E6">AW</text>
+  <!-- Ledger mark: three rows, the first one live -->
+  <rect width="64" height="64" rx="12" fill="#0F1B2D"/>
+  <circle cx="17" cy="20" r="5" fill="#E8A317"/>
+  <rect x="28" y="16.5" width="24" height="7" rx="2" fill="#F7F8FA"/>
+  <rect x="12" y="29" width="40" height="7" rx="2" fill="#F7F8FA" opacity="0.7"/>
+  <rect x="12" y="41.5" width="40" height="7" rx="2" fill="#F7F8FA" opacity="0.4"/>
 </svg>
