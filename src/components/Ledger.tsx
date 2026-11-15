@@ -1,19 +1,25 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
-import { deployments } from '../content/site'
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'
+import { deployments, publication } from '../content/site'
+import { motionOK } from '../lib/motion'
 import CaseStudy from './CaseStudy'
+import { ConvergenceChart, ForecastChart } from './Charts'
+import Section from './Section'
 
-const COLS =
-  'lg:grid-cols-[2rem_minmax(0,1.1fr)_minmax(0,0.85fr)_minmax(0,2fr)_6.5rem_1.25rem] lg:gap-x-6'
+const COLS = 'lg:grid-cols-[2.5rem_minmax(0,1.15fr)_minmax(0,1fr)_7rem_3.5rem] lg:gap-x-8'
 
 /**
- * The signature element: a ledger of real deployments. Each row is a button
- * that expands in place into the full case study. One row open at a time.
+ * The signature element: a ledger of real deployments, set large. Rows invert
+ * to ink on hover while a preview card trails the pointer; clicking a row
+ * expands the full case study in place. One row open at a time.
  * `#indago` (or any row id) in the URL opens that row. Without JavaScript,
  * every case study renders open (see index.css).
  */
 export default function Ledger() {
   const [openId, setOpenId] = useState<string | null>(null)
+  const [hoverId, setHoverId] = useState<string | null>(null)
   const buttons = useRef<(HTMLButtonElement | null)[]>([])
+  const preview = useRef<HTMLDivElement>(null)
+  const pointer = useRef({ x: 0, y: 0, cx: 0, cy: 0, frame: 0 })
 
   // Deep links: open the row named in the hash, now and on later changes.
   useEffect(() => {
@@ -53,20 +59,45 @@ export default function Ledger() {
     buttons.current[target]?.focus()
   }
 
-  return (
-    <section id="work" aria-labelledby="work-heading" className="mt-7 md:mt-9">
-      <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
-        <h2 id="work-heading" className="text-lg font-semibold">
-          Deployments
-        </h2>
-        <p className="js-only hidden text-sm text-slate sm:block">Select a row to open the case study</p>
-      </div>
+  // The preview card eases toward the pointer instead of snapping to it.
+  const onPointerMove = (e: PointerEvent) => {
+    if (e.pointerType !== 'mouse' || !motionOK()) return
+    const p = pointer.current
+    p.x = e.clientX
+    p.y = e.clientY
+    if (p.frame) return
+    const step = () => {
+      p.cx += (p.x - p.cx) * 0.14
+      p.cy += (p.y - p.cy) * 0.14
+      if (preview.current) {
+        const tilt = Math.max(-8, Math.min(8, (p.x - p.cx) * 0.06))
+        // anchored by its bottom-left corner, so it floats above the pointer and never covers the hovered row
+        preview.current.style.transform = `translate3d(${p.cx + 32}px, ${p.cy - 28}px, 0) rotate(${tilt.toFixed(2)}deg)`
+      }
+      p.frame = Math.abs(p.x - p.cx) + Math.abs(p.y - p.cy) > 0.5 ? requestAnimationFrame(step) : 0
+    }
+    p.frame = requestAnimationFrame(step)
+  }
+  useEffect(() => () => cancelAnimationFrame(pointer.current.frame), [])
 
-      <div className="mt-3 overflow-hidden rounded-lg border border-rule bg-panel shadow-panel">
-        <div aria-hidden className={`hidden border-b-2 border-ink px-5 py-2 text-xs text-slate lg:grid ${COLS}`}>
+  const showPreview = hoverId !== null && hoverId !== openId
+
+  return (
+    <Section
+      id="work"
+      index="01"
+      title={
+        <>
+          Deploy<span className="accent">ments</span>
+          <sup className="num ml-3 align-top text-base font-normal text-slate">04</sup>
+        </>
+      }
+      aside={<p>Four places my work shipped. Select one to open the case study.</p>}
+    >
+      <div onPointerMove={onPointerMove} onPointerLeave={() => setHoverId(null)} className="border-b border-ink">
+        <div aria-hidden className={`hidden px-4 pb-3 text-sm text-slate lg:grid ${COLS}`}>
           <span />
           <span>Client</span>
-          <span>Team</span>
           <span>What shipped</span>
           <span>Status</span>
           <span />
@@ -75,12 +106,7 @@ export default function Ledger() {
         {deployments.map((d, i) => {
           const open = openId === d.id
           return (
-            <div
-              key={d.id}
-              id={d.id}
-              className="ledger-row border-t border-rule [&:nth-child(2)]:border-t-0"
-              style={{ '--i': i } as CSSProperties}
-            >
+            <div key={d.id} id={d.id} data-reveal style={{ ['--d' as string]: i }} className="ledger-row border-t border-ink">
               <h3>
                 <button
                   ref={(el) => {
@@ -92,37 +118,49 @@ export default function Ledger() {
                   aria-controls={`${d.id}-panel`}
                   onClick={() => toggle(d.id)}
                   onKeyDown={(e) => onKeyDown(e, i)}
-                  className={`grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-0.5 px-5 py-3 text-left lg:py-3.5 transition-shadow ${COLS} ${
-                    open
-                      ? 'bg-paper shadow-[inset_3px_0_0_#E8A317]'
-                      : 'hover:bg-paper hover:shadow-[inset_3px_0_0_#E8A317]'
+                  onPointerEnter={(e) => e.pointerType === 'mouse' && setHoverId(d.id)}
+                  className={`group grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 px-4 py-5 text-left transition-[background-color,color,padding] duration-500 ease-out lg:py-7 ${COLS} ${
+                    open ? 'bg-ink text-paper' : 'hover:bg-ink hover:text-paper lg:hover:pl-8'
                   }`}
                 >
-                  <span aria-hidden className="num hidden text-xs text-slate lg:block">
+                  <span aria-hidden className={`num hidden text-sm lg:block ${open ? 'text-amber' : 'text-slate group-hover:text-amber'}`}>
                     0{i + 1}
                   </span>
                   <span className="col-start-1 row-start-1 lg:col-start-2">
-                    <span className="block text-base font-semibold lg:text-md">{d.client}</span>
-                    <span className="hidden whitespace-nowrap text-sm text-slate lg:block">{d.dates}</span>
+                    <span className="block text-[clamp(1.5rem,1rem+2.3vw,3.25rem)] font-semibold leading-[1.05] tracking-tight">
+                      {d.client}
+                    </span>
+                    <span className={`mt-1 hidden text-sm lg:block ${open ? 'text-mist' : 'text-slate group-hover:text-mist'}`}>
+                      {d.team} · {d.dates}
+                    </span>
                   </span>
-                  <span className="col-span-2 row-start-3 text-sm text-slate lg:col-span-1 lg:col-start-3 lg:row-start-1 lg:text-base">
-                    {d.team}
-                    <span className="lg:hidden"> · {d.dates}</span>
-                  </span>
-                  <span className="col-span-2 row-start-2 text-base lg:col-span-1 lg:col-start-4 lg:row-start-1 lg:text-md lg:font-medium">
+                  <span className="col-span-2 row-start-2 text-base lg:col-span-1 lg:col-start-3 lg:row-start-1 lg:text-xl">
                     {d.shipped}
+                    <span className={`mt-1 block text-sm lg:hidden ${open ? 'text-mist' : 'text-slate group-hover:text-mist'}`}>
+                      {d.team} · {d.dates}
+                    </span>
                   </span>
-                  <span className="col-start-2 row-start-1 flex items-center gap-2 text-sm lg:col-start-5">
+                  <span className="col-start-2 row-start-1 flex items-center gap-2 self-start pt-1.5 text-sm lg:col-start-4 lg:self-center lg:pt-0">
                     <span
                       aria-hidden
                       className={`h-2.5 w-2.5 shrink-0 rounded-full ${
-                        d.status.live ? 'bg-amber' : 'border-2 border-slate'
+                        d.status.live ? 'bg-amber' : 'border-2 border-current'
                       }`}
                     />
                     {d.status.label}
-                    <Chevron open={open} className="ml-1 lg:hidden" />
                   </span>
-                  <Chevron open={open} className="hidden lg:col-start-6 lg:block" />
+                  <span
+                    aria-hidden
+                    className={`js-only hidden h-12 w-12 items-center justify-center justify-self-end rounded-full border transition-[transform,background-color,border-color,color] duration-500 lg:col-start-5 lg:flex ${
+                      open
+                        ? 'rotate-180 border-amber bg-amber text-ink'
+                        : 'border-current group-hover:border-amber group-hover:bg-amber group-hover:text-ink'
+                    }`}
+                  >
+                    <svg viewBox="0 0 20 20" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.75">
+                      <path d="M10 4v12M4.5 10.5 10 16l5.5-5.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
                 </button>
               </h3>
               <div
@@ -140,21 +178,45 @@ export default function Ledger() {
           )
         })}
       </div>
-    </section>
+
+      {/* Preview card that trails the pointer over closed rows (decorative, mouse only). */}
+      <div
+        ref={preview}
+        aria-hidden
+        className="js-only pointer-events-none fixed left-0 top-0 z-30 hidden w-[21rem] will-change-transform lg:block"
+      >
+        <div
+          className={`origin-bottom-left -translate-y-full overflow-hidden rounded-2xl border border-rule bg-panel shadow-[0_30px_70px_-20px_rgba(15,27,45,0.45)] transition-[opacity,scale] duration-300 ${
+            showPreview ? 'scale-100 opacity-100' : 'scale-75 opacity-0'
+          }`}
+        >
+          {hoverId && <Preview id={hoverId} />}
+        </div>
+      </div>
+    </Section>
   )
 }
 
-function Chevron({ open, className = '' }: { open: boolean; className?: string }) {
+/** What the hover card shows for each row. Every value here is already on the page. */
+function Preview({ id }: { id: string }) {
+  if (id === 'copper') return <div className="p-3"><ConvergenceChart bare /></div>
+  if (id === 'livestock') return <div className="p-3"><ForecastChart bare /></div>
+  if (id === 'nailsense')
+    return (
+      <img src={publication.figure.src} alt="" width={900} height={1200} className="block aspect-[4/3] w-full object-cover" />
+    )
+  const skills = deployments[0].caseStudy.catalog?.items ?? []
   return (
-    <svg
-      aria-hidden
-      viewBox="0 0 20 20"
-      className={`js-only h-5 w-5 shrink-0 text-slate transition-transform ${open ? 'rotate-180' : ''} ${className}`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-    >
-      <path d="M5 7.5 10 12.5 15 7.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <div className="bg-ink p-5 text-paper">
+      <p className="text-sm text-mist">Claude skills in the case study</p>
+      <ul className="mt-3 flex flex-wrap gap-2">
+        {skills.map((s) => (
+          <li key={s.name} className="rounded-full border border-paper/30 px-3 py-1 text-sm">
+            {s.name}
+          </li>
+        ))}
+        <li className="rounded-full bg-amber px-3 py-1 text-sm font-medium text-ink">10+ total</li>
+      </ul>
+    </div>
   )
 }

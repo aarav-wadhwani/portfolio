@@ -1,25 +1,40 @@
 import type { ReactNode } from 'react'
 
-/** Shared section shell: one rhythm, one heading style, left aligned. */
+const tones = {
+  paper: 'bg-paper text-ink',
+  panel: 'bg-panel text-ink',
+  ink: 'bg-ink text-paper',
+}
+
+/** Shared section shell: an index number, an oversized heading, one rhythm. */
 export default function Section({
   id,
+  index,
   title,
-  lede,
+  aside,
+  tone = 'paper',
   children,
 }: {
   id: string
-  title: string
-  lede?: string
+  index: string
+  title: ReactNode
+  aside?: ReactNode
+  tone?: keyof typeof tones
   children: ReactNode
 }) {
   return (
-    <section id={id} aria-labelledby={`${id}-heading`} className="border-t border-rule">
-      <div className="mx-auto max-w-page px-6 py-14 md:py-20">
-        <h2 id={`${id}-heading`} className="text-2xl font-semibold md:text-3xl">
-          {title}
-        </h2>
-        {lede && <p className="mt-3 max-w-prose text-base text-slate md:text-md">{lede}</p>}
-        <div className="mt-8 md:mt-10">{children}</div>
+    <section id={id} aria-labelledby={`${id}-heading`} className={tones[tone]}>
+      <div className="mx-auto max-w-wide px-5 py-20 md:px-10 md:py-28">
+        <div data-reveal className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] md:items-end">
+          <div>
+            <p className={`num text-sm ${tone === 'ink' ? 'text-mist' : 'text-slate'}`}>({index})</p>
+            <h2 id={`${id}-heading`} className="mt-3 text-h2 font-semibold">
+              {title}
+            </h2>
+          </div>
+          {aside && <div className={`text-base md:text-lg ${tone === 'ink' ? 'text-mist' : 'text-slate'}`}>{aside}</div>}
+        </div>
+        <div className="mt-12 md:mt-16">{children}</div>
       </div>
     </section>
   )

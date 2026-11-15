@@ -1,5 +1,7 @@
 @import '@fontsource-variable/schibsted-grotesk/wght.css';
 @import '@fontsource-variable/martian-mono/wght.css';
+@import '@fontsource/instrument-serif/latin-400-italic.css';
+@import 'lenis/dist/lenis.css';
 
 @tailwind base;
 @tailwind components;
@@ -8,8 +10,11 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 4.5rem; /* clear the sticky nav on anchor jumps */
+    scroll-padding-top: 5.5rem; /* clear the floating nav on anchor jumps */
     -webkit-text-size-adjust: 100%;
+  }
+  html.lenis {
+    scroll-behavior: auto;
   }
 
   body {
@@ -17,7 +22,8 @@
   }
 
   ::selection {
-    background: rgba(232, 163, 23, 0.35);
+    background: theme('colors.amber');
+    color: theme('colors.ink');
   }
 
   /* Amber alone is under 3:1 on white, so the ring carries a thin ink edge. */
@@ -27,11 +33,24 @@
     box-shadow: 0 0 0 1px theme('colors.ink');
     border-radius: 2px;
   }
+  /* On the amber band the ring flips to ink. */
+  .on-amber :focus-visible {
+    outline-color: theme('colors.ink');
+    box-shadow: none;
+  }
 
   .num {
     @apply font-mono;
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.02em;
+  }
+
+  /* Italic serif accent inside display headings. */
+  .accent {
+    @apply font-serif italic;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    padding-right: 0.04em;
   }
 }
 
@@ -44,21 +63,135 @@
   }
 
   .btn {
-    @apply inline-flex min-h-[2.75rem] items-center justify-center gap-2 rounded-md border px-4 text-base font-medium transition-colors;
+    @apply inline-flex min-h-[3rem] items-center justify-center gap-2 rounded-full border px-6 text-base font-medium;
+    transition:
+      background-color 250ms,
+      color 250ms,
+      border-color 250ms,
+      transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
   }
   .btn-primary {
     @apply border-ink bg-ink text-panel;
   }
   .btn-primary:hover {
-    background: #1b2c47;
+    @apply border-amber bg-amber text-ink;
   }
   /* slate at 70% is 3.6:1 on white, enough for a control boundary */
   .btn-secondary {
-    @apply border-slate/70 bg-panel text-ink;
+    @apply border-slate/70 bg-transparent text-ink;
   }
   .btn-secondary:hover {
-    @apply border-ink;
+    @apply border-ink bg-ink text-panel;
   }
+  /* on ink or amber bands */
+  .btn-ink {
+    @apply border-ink bg-ink text-panel;
+  }
+  .btn-ink:hover {
+    @apply bg-panel text-ink;
+  }
+  .btn-outline-ink {
+    @apply border-ink bg-transparent text-ink;
+  }
+  .btn-outline-ink:hover {
+    @apply bg-ink text-panel;
+  }
+}
+
+/* ── Scroll progress ───────────────────────────────────────────────── */
+.progress {
+  transform: scaleX(var(--progress, 0));
+  transform-origin: left;
+}
+
+/* ── Hero headline: lines rise out of a mask on load ───────────────── */
+.hl-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em; /* room for descenders inside the mask */
+  margin-bottom: -0.08em;
+}
+.hl-line > span {
+  display: block;
+}
+@keyframes rise {
+  from {
+    transform: translateY(108%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.motion .hl-line > span {
+  animation: rise 1000ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation-delay: calc(var(--i, 0) * 95ms + 120ms);
+}
+.motion [data-load] {
+  animation: fade-up 800ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 520ms);
+}
+
+/* ── Reveal on scroll (only when motion is allowed and JS is running) ─ */
+.motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 900ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 900ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition-delay: calc(var(--d, 0) * 80ms);
+}
+.motion [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+/* Figures rise out of a mask. The value itself never changes. */
+.motion [data-reveal='rise'] {
+  opacity: 1;
+  transform: translateY(0.5em);
+  clip-path: inset(0 0 100% 0);
+  transition:
+    clip-path 900ms cubic-bezier(0.19, 1, 0.22, 1) 150ms,
+    transform 900ms cubic-bezier(0.19, 1, 0.22, 1) 150ms;
+}
+.motion [data-reveal='rise'].is-in {
+  clip-path: inset(-0.2em 0 -0.2em 0);
+}
+
+/* ── Marquee tape ──────────────────────────────────────────────────── */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 0.5rem;
+}
+.marquee-track > [aria-hidden='true'] {
+  display: none;
+}
+.motion .marquee-track {
+  flex-wrap: nowrap;
+  width: max-content;
+  animation: marquee 42s linear infinite;
+}
+.motion .marquee-track > [aria-hidden='true'] {
+  display: flex;
+}
+.motion .marquee:hover .marquee-track {
+  animation-play-state: paused;
 }
 
 /* ── Ledger ──────────────────────────────────────────────────────────
@@ -72,49 +205,45 @@
   overflow: hidden;
   min-height: 0;
 }
-.js .ledger-panel {
-  transition:
-    grid-template-rows 320ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    visibility 320ms;
-}
 .js .ledger-panel[data-open='false'] {
   grid-template-rows: 0fr;
   visibility: hidden;
 }
+.motion .ledger-panel {
+  transition:
+    grid-template-rows 600ms cubic-bezier(0.19, 1, 0.22, 1),
+    visibility 600ms;
+}
+.motion .ledger-panel[data-open='true'] .case-in {
+  animation: fade-up 700ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms + 120ms);
+}
 
-/* The one orchestrated moment: rows fill top to bottom on first load. */
-@keyframes ledger-fill {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
+/* Charts draw themselves when their case opens. */
+.motion .ledger-panel[data-open='true'] .draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 1400ms cubic-bezier(0.4, 0, 0.2, 1) 300ms forwards;
+}
+@keyframes draw {
   to {
-    opacity: 1;
-    transform: none;
+    stroke-dashoffset: 0;
   }
 }
-.js .ledger-row {
-  animation: ledger-fill 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  animation-delay: calc(var(--i, 0) * 60ms + 80ms);
+
+/* Image zoom on hover */
+.zoom {
+  overflow: hidden;
+}
+.zoom img {
+  transition: transform 900ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+.zoom:hover img {
+  transform: scale(1.045);
 }
 
 .no-js .js-only {
   display: none !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  .js .ledger-row {
-    animation: none;
-  }
-  .js .ledger-panel {
-    transition: none;
-  }
-  * {
-    transition-duration: 0.01ms !important;
-  }
 }
 
 /* Without JavaScript the mobile sheet cannot open, so show the links inline. */
@@ -122,4 +251,13 @@
   display: flex !important;
   flex-wrap: wrap;
   row-gap: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
 }

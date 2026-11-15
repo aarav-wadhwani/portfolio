@@ -19,12 +19,16 @@ export default {
       slate: '#4A5568',
       rule: '#DDE2EA',
       amber: '#E8A317',
+      // secondary text on ink sections (6.4:1 on ink)
+      mist: '#93A0B4',
       // data deltas inside charts only, never decorative
       up: '#12805C',
       down: '#C2410C',
     },
     fontFamily: {
       sans: ['"Schibsted Grotesk Variable"', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+      // accent words in display headings only
+      serif: ['"Instrument Serif"', 'Georgia', 'serif'],
       // numbers, dates and ledger values only
       mono: ['"Martian Mono Variable"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
     },
@@ -38,11 +42,14 @@ export default {
       xl: ['1.5625rem', { lineHeight: '1.3' }],
       '2xl': ['1.9375rem', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
       '3xl': ['2.4375rem', { lineHeight: '1.12', letterSpacing: '-0.015em' }],
-      hero: ['clamp(2.125rem, 1.1rem + 4.3vw, 3.5rem)', { lineHeight: '1.06', letterSpacing: '-0.025em' }],
+      h2: ['clamp(2.5rem, 1.2rem + 5vw, 5.25rem)', { lineHeight: '1', letterSpacing: '-0.035em' }],
+      display: ['clamp(2.5rem, 0.9rem + 6.3vw, 6.375rem)', { lineHeight: '0.98', letterSpacing: '-0.04em' }],
+      mega: ['clamp(2.75rem, 12.3vw, 13.5rem)', { lineHeight: '0.85', letterSpacing: '-0.05em' }],
     },
     extend: {
       maxWidth: {
         page: '75rem', // 1200px
+        wide: '90rem', // 1440px
         prose: '68ch',
       },
       boxShadow: {

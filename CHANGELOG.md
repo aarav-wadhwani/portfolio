@@ -5,7 +5,45 @@
 Full redesign following `portfolio_redesign_plan.md`, Direction 1. Not merged to `main`
 and not promoted to production. Awaiting review.
 
-### What changed
+### Second pass: "The Ledger, live" (15 Nov 2026)
+
+The first pass followed the plan's calm, one-animation brief and was reviewed as too basic. This
+pass keeps every verified fact and guarantee and rebuilds the presentation at full volume.
+
+- **Hero.** Full viewport. Headline at about 100px with italic serif accents (Instrument Serif)
+  and the headshot as an inline pill. A canvas price tape draws itself behind it and drifts
+  toward the pointer. Local Seattle time, an "Open to 2027 roles" beacon, and three pillars that
+  jump straight to their ledger rows.
+- **Tape band.** An ink marquee of Fact Sheet figures. It pauses on hover.
+- **Ledger.** Set large. Rows invert to ink on hover while a preview card (chart, photo or
+  skill chips) trails the pointer. The open row stays ink; charts draw themselves on open.
+- **How I work.** An ink band with a pinned heading. The step nearest the middle of the screen
+  lights up and a large numeral and progress rule track it.
+- **Research, Builds, Teaching, About.** Oversized headings with index numbers, pinned media,
+  a pull quote set in display serif, image zoom on hover.
+- **Contact.** An amber band with the address set huge, over an ink footer with the name at
+  about 12vw.
+- **Motion layer.** Reveal on scroll, masked line rises, magnetic buttons, smooth wheel
+  scrolling (Lenis, desktop only), a scroll progress bar, and a nav that hides on scroll down.
+
+Guarantees kept: all of this hangs off one `motion` class that is only set when JavaScript runs
+and the visitor has not asked for reduced motion. Without it the page is static and complete.
+The page is still prerendered, still reads with JavaScript off, and still scores 100 on all four
+Lighthouse categories on mobile. JS is about 70 KB gzipped.
+
+**Plan targets this pass knowingly misses**
+- **Page height.** Desktop is about 10,800px against the plan's 7,500px target. Full-viewport
+  hero, pinned sections and display type cost height. The old site's problem was empty gaps;
+  this length is content.
+- **"Nothing animates on scroll."** Replaced by the motion layer above, at the owner's request.
+- **Ledger in the hero.** The ledger moved to its own section directly below. The hero carries
+  the three pillars instead, so the five-second test still passes above the fold.
+
+**Deliberately not done:** figures do not count up from zero. An early build did, and a
+screenshot caught "63%" on its way to 71%. Figures now rise out of a mask, so every frame shows
+the true value.
+
+### What changed (first pass)
 
 **Positioning.** The site now leads with "I build AI systems inside finance teams, and stay
 until people use them." Indago Capital is the flagship; ML, quant and research are the proof.
@@ -61,9 +99,7 @@ scroll-linked signal trace, Power Rail, and every scroll-triggered reveal.
 - **Framer Motion removed.** Section 6.1 says keep it, but the only two animations left
   (ledger fill, row expansion) are plain CSS, which also works before hydration. Shipping the
   library for nothing would cost about 40 KB.
-- **Hero size is 56px, not 61px.** At 61px the fourth ledger row fell below a 900px fold.
 - **Dates are set in the text face, not the mono.** Mono is kept for pure figures (71%, 8.91 mm, row numbers, the DOI). An independent critique flagged mono dates as gappy.
-- **The headshot shows in the hero from tablet up and in About on phones**, so three ledger rows fit above a phone fold.
 - **Focus ring is amber with a thin ink edge.** Amber alone is about 2.2:1 on white, under the
   3:1 a focus indicator needs.
 - **Macquarie is two ledger rows**, not one tabbed case, so each desk reads as its own deployment.

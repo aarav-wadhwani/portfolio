@@ -15,19 +15,29 @@ function Frame({
   label,
   caption,
   xLabel,
+  bare,
   children,
 }: {
   label: string
   caption: string
   xLabel: string
+  /** Chart only, no card or caption (used by the ledger hover preview). */
+  bare?: boolean
   children: ReactNode
 }) {
+  if (bare)
+    return (
+      <svg viewBox="0 0 320 122" aria-hidden className="w-full">
+        <path d="M 12 8 V 104 H 312" stroke={RULE} strokeWidth="1.5" fill="none" />
+        {children}
+      </svg>
+    )
   return (
-    <figure className="rounded-md border border-rule bg-panel p-4">
+    <figure className="rounded-xl border border-rule bg-panel p-4">
       <svg viewBox="0 0 320 122" role="img" aria-label={label} className="w-full">
         <path d="M 12 8 V 104 H 312" stroke={RULE} strokeWidth="1.5" fill="none" />
         {children}
-        <text x="312" y="117" textAnchor="end" fontSize="9" fill={SLATE}>
+        <text x="312" y="117" textAnchor="end" fontSize="7" fill={SLATE}>
           {xLabel}
         </text>
       </svg>
@@ -37,10 +47,11 @@ function Frame({
 }
 
 /** Copper Scorecard: validation error settling, with signal families re-weighted. */
-export function ConvergenceChart() {
+export function ConvergenceChart({ bare }: { bare?: boolean } = {}) {
   const weights = [0.35, 0.8, 0.5, 1, 0.42, 0.68, 0.25, 0.58]
   return (
     <Frame
+      bare={bare}
       label="Illustrative chart: validation error falls and flattens across rolling windows, beside eight bars showing signal family weights being re-ranked."
       caption="Illustrative shape, not desk data. Line: error settling across rolling windows. Bars: the eight family weights at one biweekly re-rank."
       xLabel="rolling windows, then family weights"
@@ -51,6 +62,8 @@ export function ConvergenceChart() {
         strokeWidth="2"
         strokeLinejoin="round"
         fill="none"
+        pathLength={1}
+        className="draw"
       />
       {weights.map((w, i) => (
         <rect
@@ -68,9 +81,10 @@ export function ConvergenceChart() {
 }
 
 /** Livestock nowcast: forecast converging on the lagged official series. */
-export function ForecastChart() {
+export function ForecastChart({ bare }: { bare?: boolean } = {}) {
   return (
     <Frame
+      bare={bare}
       label="Illustrative chart: a dashed forecast line starts apart from the official series and converges onto it, extending about two months past where official data ends."
       caption="Illustrative shape, not desk data. Solid: lagged official series. Dashed: nowcast. Amber: where official data ends."
       xLabel="months"
@@ -81,6 +95,8 @@ export function ForecastChart() {
         strokeWidth="2"
         strokeLinejoin="round"
         fill="none"
+        pathLength={1}
+        className="draw"
       />
       <path
         d="M 16 94 L 46 80 L 76 90 L 106 67 L 136 74 L 166 52 L 196 61 L 226 44.5 L 262 50 L 300 34"
@@ -113,7 +129,7 @@ export function IndagoFlow() {
         {stages.map((s, i) => (
           <li key={s.title} className="contents">
             <div
-              className={`rounded-md border bg-panel p-4 ${
+              className={`rounded-xl border bg-panel p-4 ${
                 i === 2 ? 'border-ink shadow-[inset_0_3px_0_#E8A317]' : 'border-rule'
               }`}
             >

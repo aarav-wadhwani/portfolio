@@ -4,7 +4,8 @@ Personal site for Aarav Wadhwani: AI and quant engineering for finance teams.
 The signature element is a ledger of real deployments; each row expands into a case study.
 
 **Stack:** React 18, Vite 5, TypeScript, Tailwind 3 (custom tokens only), Fontsource
-(Schibsted Grotesk, Martian Mono). The page is prerendered to static HTML at build time and
+(Schibsted Grotesk, Instrument Serif, Martian Mono), Lenis for smooth scrolling. All motion is
+CSS plus a few small hooks in `src/lib/motion.ts`, gated by a `motion` class on `<html>`. The page is prerendered to static HTML at build time and
 hydrated on load, so it reads fully with JavaScript off.
 
 ## Commands

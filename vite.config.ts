@@ -1,7 +1,7 @@
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 
-/** Preload the one font file the hero needs, so the headline never swaps late. */
+/** Preload the font files the hero needs, so the headline never swaps late. */
 function preloadHeroFont(): Plugin {
   return {
     name: 'preload-hero-font',
@@ -9,17 +9,15 @@ function preloadHeroFont(): Plugin {
     transformIndexHtml: {
       order: 'post',
       handler(_html, ctx) {
-        const font = Object.keys(ctx.bundle ?? {}).find((f) =>
-          /schibsted-grotesk-latin-wght-normal.*\.woff2$/.test(f),
-        )
-        if (!font) return []
-        return [
-          {
+        // the two faces the hero headline uses
+        const wanted = [/schibsted-grotesk-latin-wght-normal.*\.woff2$/, /instrument-serif-latin-400-italic.*\.woff2$/]
+        return Object.keys(ctx.bundle ?? {})
+          .filter((f) => wanted.some((re) => re.test(f)))
+          .map((font) => ({
             tag: 'link',
             attrs: { rel: 'preload', as: 'font', type: 'font/woff2', href: `/${font}`, crossorigin: '' },
-            injectTo: 'head',
-          },
-        ]
+            injectTo: 'head' as const,
+          }))
       },
     },
   }

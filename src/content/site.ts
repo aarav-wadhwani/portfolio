@@ -36,6 +36,50 @@ export const positioning = {
   },
 }
 
+/**
+ * The headline again, broken into display lines for desktop. `accent` words
+ * are set in italic serif. Joined together this must equal `positioning.headline`.
+ */
+export const headlineLines: { text: string; accent?: boolean }[][] = [
+  [{ text: 'I build AI systems' }],
+  [{ text: 'inside ' }, { text: 'finance teams', accent: true }, { text: ',' }],
+  [{ text: 'and stay until' }],
+  [{ text: 'people ' }, { text: 'use them.', accent: true }],
+]
+
+/** The three pillars, shown at the foot of the hero. Each jumps to its ledger row. */
+export const pillars = [
+  {
+    label: 'Deployed AI in finance',
+    title: 'Indago Capital',
+    body: '10+ Claude skills, a DealCloud connector, a deal wiki',
+    href: '#indago',
+  },
+  {
+    label: 'Quant for trading desks',
+    title: 'Macquarie CGM',
+    body: 'A daily copper score and a livestock export nowcast',
+    href: '#copper',
+  },
+  {
+    label: 'ML research',
+    title: 'ACM UIST ’26 demo',
+    body: 'First author, NailSense',
+    href: '#nailsense',
+  },
+]
+
+/** Facts for the scrolling tape. Every one is from the Fact Sheet. */
+export const tape = [
+  'First author, ACM UIST ’26 demo',
+  '10+ Claude skills shipped at Indago',
+  '488 prospect briefs generated',
+  '71% directional accuracy on copper',
+  '2,500+ UW students on Questra',
+  '8.91 mm joint error, new user',
+  'BirdNET distilled to 60 KB',
+]
+
 /** Small plain-text proof line under the hero. */
 export const proof = [
   'First author, ACM UIST ’26 demo',

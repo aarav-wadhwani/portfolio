@@ -1,35 +1,49 @@
 import { teaching } from '../content/site'
 import Section from './Section'
 
-/** One panel: what it is, the ratings, one quote (a second on expand), and why it is here. */
+/** One student's words set large, with the facts and the reason it is here beside them. */
 export default function Teaching() {
   const t = teaching
   return (
-    <Section id="teaching" title="Teaching">
-      <div className="grid gap-8 rounded-lg border border-rule bg-panel p-6 md:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
-        <div>
-          <h3 className="text-xl font-semibold">{t.title}</h3>
-          <p className="mt-1 text-sm text-slate">
-            {t.org} · {t.dates}
+    <Section
+      id="teaching"
+      index="05"
+      title={
+        <>
+          Teach<span className="accent">ing</span>
+        </>
+      }
+      aside={
+        <p>
+          {t.title}. {t.org}, {t.dates}.
+        </p>
+      }
+    >
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.2fr)] lg:gap-20">
+        <div data-reveal>
+          <p className="border-t border-ink pt-4">
+            <span className="num block whitespace-nowrap text-[clamp(1.75rem,1.1rem+1.5vw,2.625rem)] font-medium leading-none">
+              {t.rating.value}
+            </span>
+            <span className="mt-2 block text-sm text-slate">{t.rating.label}</span>
           </p>
-          <p className="mt-4 text-base">{t.body}</p>
-          <p className="mt-5 border-t-2 border-ink pt-3">
-            <span className="num block text-xl font-medium">{t.rating.value}</span>
-            <span className="text-sm text-slate">{t.rating.label}</span>
-          </p>
+          <p className="mt-8 border-t border-ink pt-4 text-lg">{t.body}</p>
         </div>
+
         <div>
-          <figure>
-            <blockquote className="border-l-2 border-amber pl-4 text-base">“{t.quote}”</blockquote>
-            <figcaption className="mt-2 pl-4 text-sm text-slate">Student evaluation, verbatim</figcaption>
+          <figure data-reveal>
+            <blockquote className="accent text-[clamp(1.75rem,1rem+2.7vw,3.5rem)] leading-[1.12]">
+              “{t.secondQuote}”
+            </blockquote>
+            <figcaption className="mt-5 text-sm text-slate">Student evaluation, verbatim</figcaption>
           </figure>
-          <details className="mt-4 pl-4">
-            <summary className="flex min-h-[2.75rem] cursor-pointer items-center text-sm font-medium underline decoration-amber decoration-2 underline-offset-4">
+          <details data-reveal className="mt-6 border-t border-rule">
+            <summary className="flex min-h-[3rem] cursor-pointer items-center text-base font-medium underline decoration-amber decoration-2 underline-offset-4">
               One more quote
             </summary>
-            <blockquote className="mt-2 text-base">“{t.secondQuote}”</blockquote>
+            <blockquote className="max-w-prose pb-4 text-lg">“{t.quote}”</blockquote>
           </details>
-          <p className="mt-6 max-w-prose text-base">
+          <p data-reveal className="mt-10 max-w-prose border-l-2 border-amber pl-5 text-lg">
             <span className="font-semibold">Why it’s here.</span> {t.why}
           </p>
         </div>

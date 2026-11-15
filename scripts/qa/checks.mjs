@@ -26,12 +26,12 @@ for (const [w, h] of [[390, 844], [768, 1024], [1440, 900]]) {
   if (w === 1440) {
     await page.goto(base, { waitUntil: 'networkidle' })
     const height = await page.evaluate(() => document.documentElement.scrollHeight)
-    check('desktop page height under 7,500px', height < 7500, `${height}px`)
-    const fold = await page.evaluate(() => {
-      const r = [...document.querySelectorAll('.ledger-row')].map((el) => el.getBoundingClientRect().bottom)
-      return { h1: !!document.querySelector('h1'), rowsAboveFold: r.filter((b) => b <= window.innerHeight).length }
-    })
-    check('all four ledger rows above the 900px fold', fold.rowsAboveFold === 4, `${fold.rowsAboveFold} rows`)
+    check('desktop page height under 7,500px (plan target)', height < 7500, `${height}px`)
+    const fold = await page.evaluate(() => ({
+      h1: document.querySelector('h1').getBoundingClientRect().bottom <= window.innerHeight,
+      pillars: [...document.querySelectorAll('#top ul a')].filter((el) => el.getBoundingClientRect().bottom <= window.innerHeight).length,
+    }))
+    check('headline and all three pillars above the 900px fold', fold.h1 && fold.pillars === 3, `${fold.pillars} pillars`)
   }
   await page.context().close()
 }

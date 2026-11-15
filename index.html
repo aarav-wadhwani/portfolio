@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script>
-      document.documentElement.className = 'js'
+      // `motion` gates every animation, so reduced-motion and no-JS visitors get a static page.
+      document.documentElement.className =
+        'js' + (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '' : ' motion')
     </script>
     <title>Aarav Wadhwani: AI and quant engineering for finance teams</title>
     <meta
