@@ -69,6 +69,21 @@ scroll-linked signal trace, Power Rail, and every scroll-triggered reveal.
 - **Macquarie is two ledger rows**, not one tabbed case, so each desk reads as its own deployment.
 - **The old pose-overlay figure is retired** along with the 1.74 cm result it illustrated.
 
+### Found during QA
+
+- **questra-ai.com has lapsed.** It now returns a 302 to an unrelated survey site, so the Questra
+  card no longer links to it. The Fact Sheet still lists it as the site.
+- **An independent fact audit** of the built page found no contradictions with the Fact Sheet. Its
+  unsupported or stretched lines were tightened: the Indago status reads "Shipped" (only Firm
+  Dossier is confirmed as still in use), the How I work evidence lines no longer imply more than
+  the facts say, and descriptive claims were removed from chart captions and alt text.
+- **An independent design critique** (by an agent that did not write the code) drove the ledger
+  card layout below 1024px, the row numbers and header rule, the stacked Indago layout, and the
+  mobile hero tightening.
+- **Preview QA.** Vercel preview URLs are behind Vercel Authentication. The preview build log shows
+  the same asset hashes as the local production build, so the automated QA ran against that
+  identical build on localhost.
+
 ### Open TODO(aarav) items
 
 1. **Resume PDF (D3).** Replace `public/resume/Aarav_Wadhwani_Resume.pdf`. It predates Indago
@@ -85,4 +100,6 @@ scroll-linked signal trace, Power Rail, and every scroll-triggered reveal.
    Make LinkedIn match whichever you choose.
 10. **Links for OneGlance and Food Desert Mapper**, if you want them clickable.
 11. **Kernel Labs (2022).** Listed as one line ("Internship, 2022") because the Fact Sheet has no detail.
-12. **LLM ranking plots.** They are the original Plotly exports on a white matte. Re-exporting them in the site palette with larger labels would make them readable at a glance.
+12. **Questra link.** Renew questra-ai.com or leave the card unlinked.
+13. **How I work, step 2.** The DealCloud connector is the evidence for "Find the step that hurts". Confirm CRM entry really was the pain point.
+14. **LLM ranking plots.** They are the original Plotly exports on a white matte. Re-exporting them in the site palette with larger labels would make them readable at a glance.

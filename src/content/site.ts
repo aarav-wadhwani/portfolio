@@ -96,7 +96,7 @@ export interface Deployment {
   team: string
   shipped: string
   dates: string
-  /** live = amber dot (in use or ongoing); otherwise a neutral completed dot. */
+  /** live = amber dot (most recent or ongoing); otherwise a neutral completed dot. */
   status: { label: string; live: boolean }
   caseStudy: CaseStudy
 }
@@ -110,7 +110,8 @@ export const deployments: Deployment[] = [
     team: 'BD and deal team',
     shipped: '10+ Claude skills, a DealCloud connector, a deal wiki',
     dates: 'Jul to Sep 2026',
-    status: { label: 'In use', live: true },
+    // Only Firm Dossier is confirmed as still in use, so the row says Shipped.
+    status: { label: 'Shipped', live: true },
     caseStudy: {
       org: 'Indago Capital',
       title: 'AI tooling for a non-technical deal team',
@@ -122,7 +123,7 @@ export const deployments: Deployment[] = [
       blocks: [
         {
           label: 'Input',
-          body: 'A non-technical business development and deal team at an asset-based finance firm. Their work runs through DealCloud, Outlook, SharePoint, Snowflake and deal data rooms.',
+          body: 'A non-technical business development and deal team at an asset-based finance firm. Their systems: DealCloud, Outlook, SharePoint, Snowflake and deal data rooms.',
         },
         {
           label: 'Process',
@@ -148,7 +149,7 @@ export const deployments: Deployment[] = [
         'The team is non-technical, so everything runs in Claude chat. Nobody on the deal team touches code.',
       visual: 'indago-flow',
       catalog: {
-        heading: 'Skills the BD team runs',
+        heading: 'Skills written for the BD team',
         items: [
           {
             name: 'Contact Enrichment',
@@ -234,12 +235,11 @@ export const deployments: Deployment[] = [
         },
         {
           label: 'Output',
-          body: 'Nowcasts about two months ahead of official data, for the agriculture desk.',
+          body: 'Per-country nowcasts for the agriculture desk.',
         },
       ],
       metric: { prefix: 'Under', value: '5%', label: 'MAPE across 10 markets' },
-      impact:
-        'The desk sees export volumes about two months before the official figures are published.',
+      impact: 'Nowcasts run about two months ahead of official data.',
       visual: 'forecast',
     },
   },
@@ -269,7 +269,7 @@ export const deployments: Deployment[] = [
         },
         {
           label: 'Output',
-          body: 'Whole-hand posture and gesture recognition from the four stickers alone.',
+          body: 'Whole-hand posture tracking and gesture classification from four nail stickers.',
         },
       ],
       stats: [
@@ -291,7 +291,7 @@ export const howIWork = [
     title: 'Sit with the team.',
     body: 'Learn the workflow from the people doing it, not from a spec.',
     evidence:
-      'At Indago I was embedded with a non-technical BD and deal team. At Macquarie I worked with desks in London, Singapore and Hong Kong.',
+      'At Indago I was embedded with a non-technical BD and deal team.',
   },
   {
     title: 'Find the step that hurts.',
@@ -301,7 +301,7 @@ export const howIWork = [
   },
   {
     title: 'Ship something small that week.',
-    body: 'Put it where the team already works.',
+    body: 'Put it where the team already works. For Indago, that meant inside Claude chat, because the team is non-technical.',
     evidence:
       'The deal wiki runs on three Claude skills (ingest, query, update), so a non-technical deal team never touches code.',
   },
@@ -309,7 +309,7 @@ export const howIWork = [
     title: 'Measure use, then harden.',
     body: 'Fold feedback in, and document so it survives handoff.',
     evidence:
-      'Firm Dossier is now used before every meeting, and Cumulative Brief was generated for all 488 prospect companies.',
+      'Firm Dossier is now used before every meeting.',
   },
 ]
 
@@ -361,7 +361,7 @@ export const llmStudy = {
   title: 'Style-aware LLM ranking',
   kind: 'Independent research',
   summary:
-    'Human preference leaderboards reward how a model writes, not only what it knows. Using 65K+ human pairwise battles across 20+ models, a Bradley–Terry baseline shows response length has a stronger effect on rank than most model-identity coefficients.',
+    'Using 65K+ human pairwise battles across 20+ models and a Bradley–Terry baseline, response length has a stronger effect on rank than most model-identity coefficients.',
   method:
     'I extended the model to learn strength and style jointly (length, lists, headers, bold), with bootstrapped confidence intervals and per-category breakdowns.',
   link: {
@@ -371,14 +371,14 @@ export const llmStudy = {
   figures: [
     {
       src: llmCoefficients,
-      alt: 'Dot plot of four style feature coefficients with confidence intervals. Response length is far larger than list, bold or header counts.',
-      caption: 'Style coefficients: length dominates.',
+      alt: 'Dot plot of style feature coefficients with confidence intervals, for response length, lists, bold and headers.',
+      caption: 'Style feature coefficients with confidence intervals.',
       width: 1280,
       height: 501,
     },
     {
       src: llmRankingComparison,
-      alt: 'Heatmap of model ranks with and without style control. Several models move up or down once style is controlled for.',
+      alt: 'Heatmap comparing model ranks with and without style control.',
       caption: 'Ranks with and without style control.',
       width: 1280,
       height: 611,
@@ -406,7 +406,8 @@ export const builds: Build[] = [
     // "sub-2-second responses" are left out until you confirm them.
     body: 'Sorts real past UW exam questions by course, professor and topic with a GPT-based classifier. It generates nothing. Launched for 5 UW math courses and used by 2,500+ UW students.',
     stack: 'FastAPI, React, Supabase, AWS',
-    link: { href: 'https://questra-ai.com/', label: 'questra-ai.com' },
+    // TODO(aarav): questra-ai.com has lapsed and now redirects to an unrelated site
+    // (checked 14 Nov 2026), so the link is removed. Restore it if you renew the domain.
     // TODO(aarav): D8. The old screenshot showed an error banner and is not used.
     slot: {
       label: 'Screenshot slot: Questra practice view',
@@ -420,7 +421,7 @@ export const builds: Build[] = [
     link: { href: 'https://pocketbirdnet.vercel.app/', label: 'pocketbirdnet.vercel.app' },
     figure: {
       src: birdnetDevice,
-      alt: 'Breadboard circuit with a small LCD reading American Robin, score 99%',
+      alt: 'Breadboard circuit with a small LCD showing a detected bird species and its score',
       caption: 'On-device classification.',
       width: 1048,
       height: 640,
@@ -433,7 +434,6 @@ export const builds: Build[] = [
 export const alsoBuilt = [
   { name: 'OneGlance', body: 'A portfolio tracker.' },
   { name: 'Food Desert Mapper', body: 'Maps 1,500+ Washington census tracts.' },
-  { name: 'Kernel Labs', body: 'Internship, 2022.' },
 ]
 
 export const earlierWork = [
@@ -443,13 +443,15 @@ export const earlierWork = [
     dates: 'Jul to Sep 2024',
     body: 'A FastAPI analytics dashboard monitoring 100K+ weekly conversations across 6 enterprise chatbot deployments, with prompt versioning and A/B-tested rollouts. Response quality up 15%, latency stabilized by 20%.',
   },
+  // The Fact Sheet has no detail for this one, so it is a single line.
+  { org: 'Kernel Labs', role: 'Internship', dates: '2022', body: '' },
 ]
 
 export const teaching = {
   title: 'Teaching Assistant, EE 201 Computer Hardware Skills',
   org: 'UW Electrical and Computer Engineering',
   dates: 'Dec 2025 to present',
-  body: 'About 96 students across 4 lab sections and 2 quarters.',
+  body: 'About 96 students across 4 sections and 2 quarters.',
   rating: { value: '4.8–4.9 / 5.0', label: 'student ratings' },
   quote:
     'Overall, I’m very happy to have met and had Aarav as my TA in this class. I always appreciated his willingness to ask questions to my group during lab checkoffs, since it helps students be able to explain what they have just done in the lab in a conversational setting, and then he would either confirm our explanations were accurate, or give useful feedback on where we thought wrong. His debugging skills were very impressive whenever my group faced challenges while developing our robot cart, such as desoldering difficulties and motor issues. Well done Aarav.',
@@ -462,7 +464,7 @@ export const teaching = {
 
 export const about = {
   // TODO(aarav): confirm the "New Delhi to Seattle" wording reads the way you want.
-  body: 'I’m from New Delhi and study in Seattle, where I’m finishing a degree in electrical and computer engineering with a minor in data science at the University of Washington.',
+  body: 'I’m from New Delhi and study in Seattle, where I study electrical and computer engineering with a minor in data science at the University of Washington.',
   next: 'I’m looking for 2027 roles in ML engineering, applied AI and forward deployed engineering, and quant or trading technology.',
   education: [
     { label: 'Degree', value: 'B.S. Electrical and Computer Engineering, minor in Data Science' },
