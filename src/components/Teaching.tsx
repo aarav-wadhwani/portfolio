@@ -10,7 +10,7 @@ export default function Teaching() {
         <div>
           <h3 className="text-xl font-semibold">{t.title}</h3>
           <p className="mt-1 text-sm text-slate">
-            {t.org} · <span className="num text-xs">{t.dates}</span>
+            {t.org} · {t.dates}
           </p>
           <p className="mt-4 text-base">{t.body}</p>
           <p className="mt-5 border-t-2 border-ink pt-3">

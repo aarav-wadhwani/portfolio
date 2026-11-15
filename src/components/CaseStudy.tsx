@@ -9,19 +9,38 @@ import Slot from './Slot'
  */
 export default function CaseStudy({ study }: { study: CaseStudyData }) {
   const hasAside = study.visual === 'convergence' || study.visual === 'forecast'
+  // A long bulleted Process gets the wide column, with Input and Output stacked beside it.
+  const longProcess = !!study.blocks[1].points
 
   return (
     <div className="border-t border-rule bg-paper px-5 py-7 md:px-8 md:py-9">
       <h4 className="text-xl font-semibold">{study.title}</h4>
       <p className="mt-1 text-sm text-slate">
         {study.role}, {study.org}
-        {study.location ? `, ${study.location}` : ''} · <span className="num text-xs">{study.dates}</span>
+        {study.location ? `, ${study.location}` : ''} · {study.dates}
       </p>
       {study.note && <p className="mt-4 border-l-2 border-amber pl-3 text-sm">{study.note}</p>}
 
-      <div className="mt-6 grid gap-x-8 gap-y-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1fr)]">
-        {study.blocks.map((b) => (
-          <div key={b.label} className="border-t-2 border-ink pt-3">
+      <div
+        className={`mt-6 grid gap-x-8 gap-y-6 ${
+          longProcess
+            ? 'lg:grid-cols-[minmax(0,1fr)_minmax(0,1.9fr)] lg:grid-rows-[auto_1fr]'
+            : 'lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1fr)]'
+        }`}
+      >
+        {study.blocks.map((b, i) => (
+          <div
+            key={b.label}
+            className={`border-t-2 border-ink pt-3 ${
+              longProcess
+                ? i === 1
+                  ? 'lg:col-start-2 lg:row-span-2 lg:row-start-1'
+                  : i === 2
+                    ? 'lg:col-start-1 lg:row-start-2'
+                    : 'lg:col-start-1 lg:row-start-1'
+                : ''
+            }`}
+          >
             <h5 className="text-sm font-semibold">{b.label}</h5>
             {b.body && <p className="mt-2 text-base text-ink">{b.body}</p>}
             {b.points && (
@@ -37,6 +56,17 @@ export default function CaseStudy({ study }: { study: CaseStudyData }) {
           </div>
         ))}
       </div>
+
+      {study.stats && (
+        <dl className="mt-8 grid grid-cols-3 gap-4">
+          {study.stats.map((s) => (
+            <div key={s.label} className="flex flex-col-reverse justify-end border-t-2 border-ink pt-3">
+              <dt className="mt-1 text-xs text-slate sm:text-sm">{s.label}</dt>
+              <dd className="num text-lg font-medium sm:text-2xl">{s.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
 
       {study.visual === 'indago-flow' && (
         <div className="mt-8">
@@ -63,6 +93,7 @@ export default function CaseStudy({ study }: { study: CaseStudyData }) {
         <div>
           {study.metric && (
             <p className="mb-4">
+              {study.metric.prefix && <span className="text-xl font-medium">{study.metric.prefix} </span>}
               <span className="num text-2xl font-medium">{study.metric.value}</span>{' '}
               <span className="text-base text-slate">{study.metric.label}</span>
             </p>

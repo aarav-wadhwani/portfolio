@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { links, nav, positioning } from '../content/site'
 
-const SECTION_IDS = nav.map((n) => n.href.slice(1))
+const NAV_IDS = nav.map((n) => n.href.slice(1))
+// Observe every section so the highlight clears when you are between nav targets.
+const SECTION_IDS = [...NAV_IDS, 'builds', 'teaching', 'contact']
 
 /** Sticky top bar. Desktop: inline links with an active-section underline.
  *  Mobile: one menu button that opens a full-width sheet (focus trap, Esc). */
@@ -18,7 +20,8 @@ export default function Nav() {
     )
     const io = new IntersectionObserver(
       (entries) => {
-        for (const e of entries) if (e.isIntersecting) setActive(e.target.id)
+        for (const e of entries)
+          if (e.isIntersecting) setActive(NAV_IDS.includes(e.target.id) ? e.target.id : null)
       },
       { rootMargin: '-30% 0px -60% 0px' },
     )
@@ -68,7 +71,7 @@ export default function Nav() {
     }`
 
   return (
-    <header className="sticky top-0 z-40 border-b border-rule bg-paper/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-rule bg-paper/95 backdrop-blur">
       <div className="mx-auto flex min-h-14 max-w-page items-center justify-between gap-4 px-6">
         <a href="#top" className="text-base font-semibold tracking-tight">
           {positioning.name}
@@ -86,7 +89,7 @@ export default function Nav() {
               {item.label}
             </a>
           ))}
-          <a href={`mailto:${links.email}`} className="text-sm font-medium text-slate hover:text-ink">
+          <a href={`mailto:${links.email}`} className="inline-flex h-14 items-center border-b-2 border-transparent text-sm font-medium text-slate hover:text-ink">
             Email
           </a>
           <a href={links.resume} className="btn btn-secondary min-h-[2.25rem] px-3 text-sm">

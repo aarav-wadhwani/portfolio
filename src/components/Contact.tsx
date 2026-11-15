@@ -50,7 +50,7 @@ export default function Contact() {
         <div className="mx-auto flex max-w-page flex-wrap justify-between gap-2 px-6 py-6 text-sm text-slate">
           <p>© 2026 {positioning.name}</p>
           <p>
-            Last updated <span className="num text-xs">{contact.updated}</span>
+            Last updated {contact.updated}
           </p>
         </div>
       </footer>

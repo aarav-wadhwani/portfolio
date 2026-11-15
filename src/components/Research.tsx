@@ -26,21 +26,21 @@ export default function Research() {
               <span className="text-slate">{p.affiliations}.</span>
             </p>
             <p className="mt-2 text-sm text-slate">
-              {p.venue} Published <span className="num text-xs">{p.published}</span>.
+              {p.venue} Published {p.published}.
             </p>
 
-            <dl className="mt-6 grid gap-4 sm:grid-cols-3">
+            <dl className="mt-6 grid grid-cols-3 gap-4">
               {p.results.map((r) => (
                 <div key={r.label} className="flex flex-col-reverse justify-end border-t-2 border-ink pt-3">
-                  <dt className="mt-1 text-sm text-slate">{r.label}</dt>
-                  <dd className="num text-xl font-medium md:text-2xl">{r.value}</dd>
+                  <dt className="mt-1 text-xs text-slate sm:text-sm">{r.label}</dt>
+                  <dd className="num text-lg font-medium sm:text-2xl">{r.value}</dd>
                 </div>
               ))}
             </dl>
 
             <ul className="mt-6 flex flex-wrap gap-2" aria-label="Hardware">
               {p.specs.map((s) => (
-                <li key={s} className="num rounded border border-rule bg-paper px-2 py-1 text-xs">
+                <li key={s} className="rounded border border-rule bg-paper px-2 py-1 text-sm">
                   {s}
                 </li>
               ))}
@@ -58,7 +58,7 @@ export default function Research() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-1">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
             <figure>
               <div className="rounded-md border border-rule bg-panel p-2">
                 <img
@@ -78,8 +78,8 @@ export default function Research() {
         </div>
       </article>
 
-      <article className="mt-12">
-        <div className="max-w-prose">
+      <article className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
+        <div>
           <p className="text-sm text-slate">{llmStudy.kind}</p>
           <h3 className="mt-1 text-xl font-semibold md:text-2xl">{llmStudy.title}</h3>
           <p className="mt-3 text-base">{llmStudy.summary}</p>
@@ -90,7 +90,7 @@ export default function Research() {
             </a>
           </p>
         </div>
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6">
           {llmStudy.figures.map((f) => (
             <Fig key={f.src} figure={f} />
           ))}

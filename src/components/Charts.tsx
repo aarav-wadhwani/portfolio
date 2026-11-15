@@ -11,12 +11,25 @@ const SLATE = '#4A5568'
 const RULE = '#DDE2EA'
 const AMBER = '#E8A317'
 
-function Frame({ label, caption, children }: { label: string; caption: string; children: ReactNode }) {
+function Frame({
+  label,
+  caption,
+  xLabel,
+  children,
+}: {
+  label: string
+  caption: string
+  xLabel: string
+  children: ReactNode
+}) {
   return (
     <figure className="rounded-md border border-rule bg-panel p-4">
-      <svg viewBox="0 0 320 120" role="img" aria-label={label} className="w-full">
+      <svg viewBox="0 0 320 122" role="img" aria-label={label} className="w-full">
         <path d="M 12 8 V 104 H 312" stroke={RULE} strokeWidth="1.5" fill="none" />
         {children}
+        <text x="312" y="117" textAnchor="end" fontSize="9" fill={SLATE}>
+          {xLabel}
+        </text>
       </svg>
       <figcaption className="mt-2 text-xs text-slate">{caption}</figcaption>
     </figure>
@@ -29,7 +42,8 @@ export function ConvergenceChart() {
   return (
     <Frame
       label="Illustrative chart: validation error falls and flattens across rolling windows, beside eight bars showing signal family weights being re-ranked."
-      caption="Illustrative shape, not desk data: error settling across rolling windows, and the eight family weights at one biweekly re-rank."
+      caption="Illustrative shape, not desk data. Line: error settling across rolling windows. Bars: the eight family weights at one biweekly re-rank."
+      xLabel="rolling windows, then family weights"
     >
       <path
         d="M 16 20 L 32 38 L 46 26 L 62 52 L 78 44 L 94 64 L 112 60 L 130 76 L 150 72 L 172 82 L 196 80 L 220 84"
@@ -58,7 +72,8 @@ export function ForecastChart() {
   return (
     <Frame
       label="Illustrative chart: a dashed forecast line starts apart from the official series and converges onto it, extending about two months past where official data ends."
-      caption="Illustrative shape, not desk data: the nowcast (dashed) runs ahead of the lagged official series (solid)."
+      caption="Illustrative shape, not desk data. Solid: lagged official series. Dashed: nowcast. Amber: where official data ends."
+      xLabel="months"
     >
       <path
         d="M 16 78 L 46 68 L 76 82 L 106 60 L 136 70 L 166 50 L 196 60 L 226 44"

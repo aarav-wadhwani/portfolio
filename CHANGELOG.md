@@ -62,6 +62,8 @@ scroll-linked signal trace, Power Rail, and every scroll-triggered reveal.
   (ledger fill, row expansion) are plain CSS, which also works before hydration. Shipping the
   library for nothing would cost about 40 KB.
 - **Hero size is 56px, not 61px.** At 61px the fourth ledger row fell below a 900px fold.
+- **Dates are set in the text face, not the mono.** Mono is kept for pure figures (71%, 8.91 mm, row numbers, the DOI). An independent critique flagged mono dates as gappy.
+- **The headshot shows in the hero from tablet up and in About on phones**, so three ledger rows fit above a phone fold.
 - **Focus ring is amber with a thin ink edge.** Amber alone is about 2.2:1 on white, under the
   3:1 a focus indicator needs.
 - **Macquarie is two ledger rows**, not one tabbed case, so each desk reads as its own deployment.
@@ -82,4 +84,5 @@ scroll-linked signal trace, Power Rail, and every scroll-triggered reveal.
 9. **Domain (D4).** Register `aaravwadhwani.com` if you want it, then switch the canonical back.
    Make LinkedIn match whichever you choose.
 10. **Links for OneGlance and Food Desert Mapper**, if you want them clickable.
-11. **Kernel Labs (2022).** Listed with no description because the Fact Sheet has none.
+11. **Kernel Labs (2022).** Listed as one line ("Internship, 2022") because the Fact Sheet has no detail.
+12. **LLM ranking plots.** They are the original Plotly exports on a white matte. Re-exporting them in the site palette with larger labels would make them readable at a glance.

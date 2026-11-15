@@ -3,7 +3,7 @@ import { deployments } from '../content/site'
 import CaseStudy from './CaseStudy'
 
 const COLS =
-  'md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.85fr)_minmax(0,2fr)_6.5rem_1.25rem] md:gap-x-6'
+  'lg:grid-cols-[2rem_minmax(0,1.1fr)_minmax(0,0.85fr)_minmax(0,2fr)_6.5rem_1.25rem] lg:gap-x-6'
 
 /**
  * The signature element: a ledger of real deployments. Each row is a button
@@ -49,16 +49,17 @@ export default function Ledger() {
   }
 
   return (
-    <section id="work" aria-labelledby="work-heading" className="mt-9">
+    <section id="work" aria-labelledby="work-heading" className="mt-7 md:mt-9">
       <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
         <h2 id="work-heading" className="text-lg font-semibold">
           Deployments
         </h2>
-        <p className="js-only text-sm text-slate">Select a row to open the case study</p>
+        <p className="js-only hidden text-sm text-slate sm:block">Select a row to open the case study</p>
       </div>
 
       <div className="mt-3 overflow-hidden rounded-lg border border-rule bg-panel shadow-panel">
-        <div aria-hidden className={`hidden px-5 py-2 text-xs text-slate md:grid ${COLS}`}>
+        <div aria-hidden className={`hidden border-b-2 border-ink px-5 py-2 text-xs text-slate lg:grid ${COLS}`}>
+          <span />
           <span>Client</span>
           <span>Team</span>
           <span>What shipped</span>
@@ -72,7 +73,7 @@ export default function Ledger() {
             <div
               key={d.id}
               id={d.id}
-              className="ledger-row border-t border-rule [&:nth-child(2)]:border-t-0 md:[&:nth-child(2)]:border-t"
+              className="ledger-row border-t border-rule [&:nth-child(2)]:border-t-0"
               style={{ '--i': i } as CSSProperties}
             >
               <h3>
@@ -86,21 +87,27 @@ export default function Ledger() {
                   aria-controls={`${d.id}-panel`}
                   onClick={() => toggle(d.id)}
                   onKeyDown={(e) => onKeyDown(e, i)}
-                  className={`grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 px-5 py-3.5 text-left transition-colors ${COLS} ${
-                    open ? 'bg-paper shadow-[inset_3px_0_0_#E8A317]' : 'hover:bg-paper'
+                  className={`grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-0.5 px-5 py-3 text-left lg:py-3.5 transition-shadow ${COLS} ${
+                    open
+                      ? 'bg-paper shadow-[inset_3px_0_0_#E8A317]'
+                      : 'hover:bg-paper hover:shadow-[inset_3px_0_0_#E8A317]'
                   }`}
                 >
-                  <span className="col-start-1 row-start-1">
-                    <span className="block text-base font-semibold md:text-md">{d.client}</span>
-                    <span className="num block text-xs text-slate">{d.dates}</span>
+                  <span aria-hidden className="num hidden text-xs text-slate lg:block">
+                    0{i + 1}
                   </span>
-                  <span className="col-span-2 row-start-3 text-sm text-slate md:col-span-1 md:col-start-2 md:row-start-1 md:text-base">
+                  <span className="col-start-1 row-start-1 lg:col-start-2">
+                    <span className="block text-base font-semibold lg:text-md">{d.client}</span>
+                    <span className="hidden whitespace-nowrap text-sm text-slate lg:block">{d.dates}</span>
+                  </span>
+                  <span className="col-span-2 row-start-3 text-sm text-slate lg:col-span-1 lg:col-start-3 lg:row-start-1 lg:text-base">
                     {d.team}
+                    <span className="lg:hidden"> · {d.dates}</span>
                   </span>
-                  <span className="col-span-2 row-start-2 text-base md:col-span-1 md:col-start-3 md:row-start-1">
+                  <span className="col-span-2 row-start-2 text-base lg:col-span-1 lg:col-start-4 lg:row-start-1 lg:text-md lg:font-medium">
                     {d.shipped}
                   </span>
-                  <span className="col-start-2 row-start-1 flex items-center gap-2 text-sm md:col-start-4">
+                  <span className="col-start-2 row-start-1 flex items-center gap-2 text-sm lg:col-start-5">
                     <span
                       aria-hidden
                       className={`h-2.5 w-2.5 shrink-0 rounded-full ${
@@ -108,19 +115,9 @@ export default function Ledger() {
                       }`}
                     />
                     {d.status.label}
+                    <Chevron open={open} className="ml-1 lg:hidden" />
                   </span>
-                  <svg
-                    aria-hidden
-                    viewBox="0 0 20 20"
-                    className={`js-only hidden h-5 w-5 text-slate transition-transform md:col-start-5 md:block ${
-                      open ? 'rotate-180' : ''
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.75"
-                  >
-                    <path d="M5 7.5 10 12.5 15 7.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <Chevron open={open} className="hidden lg:col-start-6 lg:block" />
                 </button>
               </h3>
               <div
@@ -139,5 +136,20 @@ export default function Ledger() {
         })}
       </div>
     </section>
+  )
+}
+
+function Chevron({ open, className = '' }: { open: boolean; className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 20 20"
+      className={`js-only h-5 w-5 shrink-0 text-slate transition-transform ${open ? 'rotate-180' : ''} ${className}`}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+    >
+      <path d="M5 7.5 10 12.5 15 7.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   )
 }

@@ -57,7 +57,7 @@ export default function Builds() {
             <p>
               <span className="font-semibold">{w.org}</span>
               <span className="block text-sm text-slate">
-                {w.role} · <span className="num text-xs">{w.dates}</span>
+                {w.role} · {w.dates}
               </span>
             </p>
             {w.body && <p className="text-base">{w.body}</p>}

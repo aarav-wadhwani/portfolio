@@ -77,8 +77,10 @@ export interface CaseStudy {
   note?: string
   blocks: [CaseBlock, CaseBlock, CaseBlock]
   impact: string
-  /** One small headline metric with its label, where the Fact Sheet has one. */
-  metric?: { value: string; label: string }
+  /** One small headline metric, where the Fact Sheet has one. Only `value` is set in mono. */
+  metric?: { prefix?: string; value: string; label: string }
+  /** A row of result figures (used by the NailSense case). */
+  stats?: { value: string; label: string }[]
   visual?: 'indago-flow' | 'convergence' | 'forecast'
   /** Named tools, rendered as a compact two-column list. */
   catalog?: { heading: string; items: { name: string; does: string }[]; more?: string }
@@ -235,7 +237,7 @@ export const deployments: Deployment[] = [
           body: 'Nowcasts about two months ahead of official data, for the agriculture desk.',
         },
       ],
-      metric: { value: 'Under 5%', label: 'MAPE across 10 markets' },
+      metric: { prefix: 'Under', value: '5%', label: 'MAPE across 10 markets' },
       impact:
         'The desk sees export volumes about two months before the official figures are published.',
       visual: 'forecast',
@@ -267,8 +269,13 @@ export const deployments: Deployment[] = [
         },
         {
           label: 'Output',
-          body: '8.91 mm average joint error for a new user, 5.97 mm personalized (PA-MPJPE), and 93.4% gesture classification.',
+          body: 'Whole-hand posture and gesture recognition from the four stickers alone.',
         },
+      ],
+      stats: [
+        { value: '8.91 mm', label: 'average joint error, new user' },
+        { value: '5.97 mm', label: 'personalized (PA-MPJPE)' },
+        { value: '93.4%', label: 'gesture classification' },
       ],
       impact:
         'Demo applications: live 3D hand rendering, ASL to voice translation in real time, and gesture-controlled music.',
@@ -426,6 +433,7 @@ export const builds: Build[] = [
 export const alsoBuilt = [
   { name: 'OneGlance', body: 'A portfolio tracker.' },
   { name: 'Food Desert Mapper', body: 'Maps 1,500+ Washington census tracts.' },
+  { name: 'Kernel Labs', body: 'Internship, 2022.' },
 ]
 
 export const earlierWork = [
@@ -434,12 +442,6 @@ export const earlierWork = [
     role: 'Software Engineering Intern',
     dates: 'Jul to Sep 2024',
     body: 'A FastAPI analytics dashboard monitoring 100K+ weekly conversations across 6 enterprise chatbot deployments, with prompt versioning and A/B-tested rollouts. Response quality up 15%, latency stabilized by 20%.',
-  },
-  {
-    org: 'Kernel Labs',
-    role: 'Intern',
-    dates: '2022',
-    body: '',
   },
 ]
 

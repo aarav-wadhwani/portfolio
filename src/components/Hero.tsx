@@ -4,15 +4,15 @@ import Ledger from './Ledger'
 /** Above the fold: who I am, what I ship, how to reach me, and the ledger. */
 export default function Hero() {
   return (
-    <div id="top" className="mx-auto max-w-page px-6 pb-14 pt-8 md:pb-20 md:pt-10">
-      <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_auto] md:gap-12">
+    <div id="top" className="mx-auto max-w-page px-6 pb-14 pt-5 md:pb-20 md:pt-10">
+      <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_auto] md:gap-8 lg:gap-12">
         <div>
           <h1 className="max-w-[22ch] text-balance text-hero font-semibold">
             <span className="sr-only">{positioning.name}: </span>
             {positioning.headline}
           </h1>
-          <p className="mt-4 max-w-prose text-base text-slate md:text-md">{positioning.supporting}</p>
-          <div className="mt-5 flex flex-wrap gap-3">
+          <p className="mt-3 max-w-prose text-base leading-normal text-slate md:mt-4 md:text-md md:leading-relaxed">{positioning.supporting}</p>
+          <div className="mt-4 flex flex-wrap gap-3 md:mt-5">
             <a href={links.resume} className="btn btn-primary">
               Resume
             </a>
@@ -30,7 +30,7 @@ export default function Hero() {
           width={640}
           height={640}
           {...{ fetchpriority: 'high' }}
-          className="order-first h-20 w-20 rounded-lg border border-rule object-cover md:order-none md:h-44 md:w-44"
+          className="hidden rounded-lg border border-rule object-cover md:block md:h-36 md:w-36 lg:h-52 lg:w-52"
         />
       </div>
 

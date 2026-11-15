@@ -1,4 +1,4 @@
-import { about, skills } from '../content/site'
+import { about, positioning, skills } from '../content/site'
 import Section from './Section'
 
 export default function About() {
@@ -6,6 +6,15 @@ export default function About() {
     <Section id="about" title="About">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
         <div className="max-w-prose space-y-4 text-base md:text-md">
+          <img
+            src={positioning.headshot.src}
+            alt={positioning.headshot.alt}
+            width={640}
+            height={640}
+            loading="lazy"
+            decoding="async"
+            className="h-24 w-24 rounded-lg border border-rule object-cover md:hidden"
+          />
           <p>{about.body}</p>
           <p>{about.next}</p>
         </div>
