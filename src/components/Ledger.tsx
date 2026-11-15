@@ -26,14 +26,19 @@ export default function Ledger() {
     return () => window.removeEventListener('hashchange', fromHash)
   }, [])
 
-  const toggle = useCallback((id: string) => {
-    setOpenId((cur) => {
-      const next = cur === id ? null : id
+  const toggle = useCallback(
+    (id: string) => {
+      const next = openId === id ? null : id
+      setOpenId(next)
       // keep the URL shareable without adding history entries or jumping the page
-      window.history.replaceState(null, '', next ? `#${next}` : window.location.pathname)
-      return next
-    })
-  }, [])
+      window.history.replaceState(
+        null,
+        '',
+        next ? `#${next}` : window.location.pathname + window.location.search,
+      )
+    },
+    [openId],
+  )
 
   const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>, i: number) => {
     const last = deployments.length - 1

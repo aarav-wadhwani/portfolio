@@ -1,15 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { contact, links, positioning } from '../content/site'
 
 /** Contact: one sentence on what I want, then every way to reach me. */
 export default function Contact() {
   const [copied, setCopied] = useState(false)
+  const timer = useRef<number>()
+  useEffect(() => () => window.clearTimeout(timer.current), [])
 
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(links.email)
       setCopied(true)
-      setTimeout(() => setCopied(false), 2500)
+      window.clearTimeout(timer.current)
+      timer.current = window.setTimeout(() => setCopied(false), 2500)
     } catch {
       window.location.href = `mailto:${links.email}`
     }

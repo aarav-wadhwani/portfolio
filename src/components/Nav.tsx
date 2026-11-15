@@ -29,9 +29,12 @@ export default function Nav() {
     return () => io.disconnect()
   }, [])
 
-  // Mobile sheet: lock scroll, trap focus, close on Esc.
+  // Mobile sheet: lock scroll, trap focus, close on Esc or when the viewport grows past mobile.
   useEffect(() => {
     if (!open) return
+    const desktop = window.matchMedia('(min-width: 768px)')
+    const onResize = () => desktop.matches && setOpen(false)
+    desktop.addEventListener('change', onResize)
     const sheet = sheetRef.current
     const focusables = () =>
       [buttonRef.current, ...(sheet?.querySelectorAll<HTMLElement>('a[href]') ?? [])].filter(
@@ -62,6 +65,7 @@ export default function Nav() {
     return () => {
       document.body.style.overflow = ''
       document.removeEventListener('keydown', onKey)
+      desktop.removeEventListener('change', onResize)
     }
   }, [open])
 
@@ -73,7 +77,7 @@ export default function Nav() {
   return (
     <header className="sticky top-0 z-40 border-b border-rule bg-paper/95 backdrop-blur">
       <div className="mx-auto flex min-h-14 max-w-page items-center justify-between gap-4 px-6">
-        <a href="#top" className="text-base font-semibold tracking-tight">
+        <a href="#top" className="inline-flex min-h-[2.75rem] items-center text-base font-semibold tracking-tight">
           {positioning.name}
         </a>
 
@@ -100,7 +104,7 @@ export default function Nav() {
         <button
           ref={buttonRef}
           type="button"
-          className="js-only btn btn-secondary min-h-[2.5rem] px-3 text-sm md:hidden"
+          className="js-only btn btn-secondary px-3 text-sm md:hidden"
           aria-expanded={open}
           aria-controls="mobile-menu"
           onClick={() => setOpen((v) => !v)}

@@ -52,8 +52,9 @@
   .btn-primary:hover {
     background: #1b2c47;
   }
+  /* slate at 70% is 3.6:1 on white, enough for a control boundary */
   .btn-secondary {
-    @apply border-rule bg-panel text-ink;
+    @apply border-slate/70 bg-panel text-ink;
   }
   .btn-secondary:hover {
     @apply border-ink;

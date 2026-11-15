@@ -24,7 +24,9 @@ export default function Teaching() {
             <figcaption className="mt-2 pl-4 text-sm text-slate">Student evaluation, verbatim</figcaption>
           </figure>
           <details className="mt-4 pl-4">
-            <summary className="cursor-pointer text-sm font-medium">One more</summary>
+            <summary className="flex min-h-[2.75rem] cursor-pointer items-center text-sm font-medium underline decoration-amber decoration-2 underline-offset-4">
+              One more quote
+            </summary>
             <blockquote className="mt-2 text-base">“{t.secondQuote}”</blockquote>
           </details>
           <p className="mt-6 max-w-prose text-base">
